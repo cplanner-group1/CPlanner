@@ -80,10 +80,12 @@ WSGI_APPLICATION = 'CPlanner.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'CPlanner',
-        'USER': 'mahzoun99',
-        'PASSWORD': ''
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbqusq0o4v1uuc',
+        'USER': 'cieqnlihpljwki',
+        'PASSWORD': 'dab0c20cbaf9ce0dc5e9e147f96e12be19d5cc1d1d4e045720074dc36072f3a8',
+        'HOST': 'ec2-54-78-36-245.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
