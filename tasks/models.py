@@ -3,14 +3,14 @@ from django.utils import timezone
 
 
 class Task(models.Model):
-    # user_id = models.ForeignKey(Question, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    group = models.CharField(max_length=100)
+    # owner = models.ForeignKey(Question, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100, default='')
+    group = models.CharField(max_length=100, default='')
     status = models.IntegerField(default=0)
-    deadline = models.DateTimeField()
+    deadline = models.DateTimeField(default=timezone.now)
     priority = models.IntegerField(default=0)
-    last_edit = models.DateTimeField()
-    description = models.TextField()
+    last_edit = models.DateTimeField(default=timezone.now)
+    description = models.TextField(default='')
 
     def remained_time(self):
         return self.deadline - timezone.now()
