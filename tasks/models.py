@@ -9,14 +9,14 @@ class Task(models.Model):
     status = models.IntegerField(default=0)
     deadline = models.DateTimeField(default=timezone.now)
     priority = models.IntegerField(default=0)
-    last_edit = models.DateTimeField(default=timezone.now)
+    # last_edit = models.DateTimeField(default=timezone.now)
     description = models.TextField(default='')
 
     def remained_time(self):
-        return self.deadline - timezone.now()
-
-    def last_edit_time(self):
-        return timezone.now() - self.last_edit
+        if self.deadline - timezone.now() > 0:
+            return self.deadline - timezone.now()
+        else:
+            return 0
 
     def __str__(self):
         return self.title
