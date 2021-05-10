@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+import datetime
 from pathlib import Path
+from tzlocal import get_localzone
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,7 +31,7 @@ ALLOWED_HOSTS = ['cplanner-group1.herokuapp.com',
                  '127.0.0.1',
                  ]
 
-
+AUTH_USER_MODEL = 'accounts.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,14 +42,29 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+    'drf_yasg',
+    # 'corsheaders',
+
     'accounts.apps.AccountsConfig',
     'tasks.apps.TasksConfig',
 ]
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,6 +93,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CPlanner.wsgi.application'
 
+"""
+# CORS WHITELIST
+CORS_ORIGIN_WHITELIST = [
+    "https://cplanner-group1.herokuapp.com/",
+    "http://127.0.0.1:8000",
+]
+"""
+"""
+CORS_ORIGIN_REGEX_WHITELIST = [
+    r"^https://\w+\.netlify\.app$",
+]
+"""
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -89,6 +118,21 @@ DATABASES = {
         'HOST': 'ec2-54-78-36-245.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
+}
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10,
+    # 'NON_FIELD_ERRORS_KEY': 'error',
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # )
+}
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }
 
 
@@ -116,7 +160,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+local_timezone = get_localzone()
+TIME_ZONE = local_timezone.__str__()
 
 USE_I18N = True
 
@@ -133,6 +178,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'cplanner.email.management@gmail.com'
+EMAIL_HOST_PASSWORD ='txbqarxigmegrufn'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
