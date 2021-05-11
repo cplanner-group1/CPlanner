@@ -7,9 +7,6 @@ from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 class CustomOutstandingTokenAdmin(OutstandingTokenAdmin):
     actions = []
 
-    # def get_readonly_fields(self, *args, **kwargs):
-    #     return []
-
     def has_delete_permission(self, *args, **kwargs):
         return True
 
