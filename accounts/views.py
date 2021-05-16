@@ -94,11 +94,11 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
             token = PasswordResetTokenGenerator().make_token(user)
             current_site = get_current_site(
                 request=request).domain
-            relativeLink = reverse(
+            relative_link = reverse(
                 'password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
             redirect_url = request.data.get('redirect_url', '')
-            absurl = 'http://' + current_site + relativeLink
-            email_body = 'Hello, \n Use link below to reset your password  \n' + \
+            absurl = 'http://' + current_site + relative_link
+            email_body = 'Hello, ' + user.username + '\n Use link below to reset your password  \n' + \
                          absurl + "?redirect_url=" + redirect_url
             data = {'email_body': email_body, 'to_email': user.email,
                     'email_subject': 'Reset your passsword'}

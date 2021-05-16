@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-class UserTasksView(APIView):
+class UserTasksViewFa(APIView):
     serializer_class = UserTasksSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -24,7 +24,8 @@ class UserTasksView(APIView):
                 'deadline': task.deadline.strftime("%Y-%m-%d %H:%M:%S"),
                 'priority': task.priority,
                 'description': task.description,
-                'remained_time': task.remained_time(),
+                'remained_time': task.remained_time_fa(),
+                'id': task.id
             })
         return Response({'tasks_list': result}, status=status.HTTP_200_OK)
 
@@ -40,3 +41,12 @@ class UserTasksView(APIView):
         )
         return Response("New task successfully added.", status=status.HTTP_200_OK)
 
+    def delete(self, request):
+        ids = request.data.getlist('ids')
+        for ID in ids:
+            try:
+                Task.objects.filter(id=ID).delete()
+            except:
+                continue
+        return Response(str(len(ids)) + " tasks deleted successfully.",
+                        status=status.HTTP_200_OK)
