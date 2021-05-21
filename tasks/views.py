@@ -13,6 +13,7 @@ class UserTasksViewFa(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
+        # ordered by deadline
         user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('-deadline')
         result = []
         for task in user_tasks[::-1]:
