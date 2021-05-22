@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
-    # 'corsheaders',
+    'corsheaders',
 
     'accounts.apps.AccountsConfig',
     'tasks.apps.TasksConfig',
@@ -64,7 +64,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -93,18 +93,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'CPlanner.wsgi.application'
 
-"""
-# CORS WHITELIST
-CORS_ORIGIN_WHITELIST = [
-    "https://cplanner-group1.herokuapp.com/",
-    "http://127.0.0.1:8000",
-]
-"""
-"""
-CORS_ORIGIN_REGEX_WHITELIST = [
-    r"^https://\w+\.netlify\.app$",
-]
-"""
+
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
