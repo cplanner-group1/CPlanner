@@ -13,8 +13,8 @@ class UserTasksViewFa(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        # ordered by deadline
-        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('-deadline')
+        # ordered by deadline then priority
+        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('-deadline', 'priority')
         result = []
         for task in user_tasks[::-1]:
             result.append({
@@ -51,3 +51,26 @@ class UserTasksViewFa(APIView):
                 continue
         return Response(str(len(ids)) + " tasks deleted successfully.",
                         status=status.HTTP_200_OK)
+
+
+class GetTasksByPriority(APIView):
+    serializer_class = UserTasksSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        # ordered by priority then deadline
+        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('priority', '-deadline')
+        result_by_priority = []
+        for task in user_tasks[::-1]:
+            result_by_priority.append({
+                'user': request.user.email,
+                'title': task.title,
+                'group': task.group,
+                'status': task.status,
+                'deadline': task.deadline.strftime("%Y-%m-%d %H:%M:%S"),
+                'priority': task.priority,
+                'description': task.description,
+                'remained_time': task.remained_time_fa(),
+                'id': task.id
+            })
+        return Response({'tasks_list': result_by_priority}, status=status.HTTP_200_OK)
