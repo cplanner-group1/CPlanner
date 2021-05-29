@@ -52,11 +52,11 @@ class UserTaskDelete(APIView):
         counts = 0
         for ID in ids:
             try:
-                #Task.objects.filter(id=ID).delete()
+                Task.objects.filter(id=ID).delete()
                 counts += 1
             except:
                 continue
-        return Response(str(counts) + " tasks deleted successfully.",
+        return Response("با موفقیت حذف شد.",
                         status=status.HTTP_200_OK)
 
 
