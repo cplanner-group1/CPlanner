@@ -55,3 +55,21 @@ class User(AbstractBaseUser, PermissionsMixin):
             'refresh': str(refresh),
             'access': str(refresh.access_token)
         }
+
+
+class Student(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='student_user')
+    first_name = models.CharField(max_length=100, default='')
+    last_name = models.CharField(max_length=100, default='')
+
+    university = models.CharField(max_length=100, default='')
+    field = models.CharField(max_length=100, default='')
+    entry_year = models.IntegerField()
+    gpa = models.FloatField()
+    taken_units = models.IntegerField()
+    passed_units = models.IntegerField()
+
+    # birthday = models.DateField()
+    # phone_number
+
+

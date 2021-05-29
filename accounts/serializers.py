@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Student
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
@@ -139,3 +139,11 @@ class LogoutSerializer(serializers.Serializer):
             RefreshToken(self.token).blacklist()
         except TokenError:
             self.fail('bad_token')
+
+
+class StudentInfoSerializer(serializers.Serializer):
+    class Meta:
+        model = Student
+        fields = ['user', 'first_name', 'last_name',
+                  'university', 'faculty', 'field',
+                  'entry_year', 'gpa', 'taken_units', 'passed_units']

@@ -1,22 +1,25 @@
 # from django.shortcuts import render, redirect
 from rest_framework import generics, status, views, permissions
-from .serializers import RegisterSerializer, SetNewPasswordSerializer, ResetPasswordEmailRequestSerializer, \
-    EmailVerificationSerializer, LoginSerializer, LogoutSerializer
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from .serializers import RegisterSerializer, SetNewPasswordSerializer, ResetPasswordEmailRequestSerializer, \
+    EmailVerificationSerializer, LoginSerializer, LogoutSerializer, StudentInfoSerializer
 from .models import User
+from .renderers import UserRenderer
+from .utils import Util
+
 import jwt
 from django.conf import settings
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from .renderers import UserRenderer
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from .utils import Util
 from django.http import HttpResponsePermanentRedirect
 import os
 
@@ -154,3 +157,11 @@ class LogoutAPIView(generics.GenericAPIView):
         serializer.save()
         auth_logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class StudentInfo(views.APIView):
+    serializer_class = StudentInfoSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        pass
