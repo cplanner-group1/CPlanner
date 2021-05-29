@@ -6,11 +6,12 @@ from persiantools.digits import to_word
 
 class Task(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='task_owner')
+    index = models.IntegerField(default=0)
     title = models.CharField(max_length=100, default='')
     group = models.CharField(max_length=100, default='')
     status = models.IntegerField(default=0)
     deadline = models.DateTimeField(default=timezone.now)
-    priority = models.IntegerField(default=0)
+    priority = models.IntegerField(default=1)
     description = models.TextField(default='')
 
     def remained_time_fa(self):

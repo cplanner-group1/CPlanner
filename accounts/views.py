@@ -156,7 +156,7 @@ class LogoutAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         auth_logout(request)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response("Logout successfully.", status=status.HTTP_204_NO_CONTENT)
 
 
 class StudentInfo(views.APIView):

@@ -3,7 +3,7 @@ from .models import Task
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['owner', 'title', 'group', 'priority',
+    list_display = ['owner', 'index', 'title', 'group', 'priority',
                     'status', 'deadline']
 
 
