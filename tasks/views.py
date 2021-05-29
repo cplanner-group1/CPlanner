@@ -48,13 +48,15 @@ class UserTaskDelete(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        ids = request.data.getlist('ids')
+        ids = request.data.get('deleted')
+        counts = 0
         for ID in ids:
             try:
-                Task.objects.filter(id=ID).delete()
+                #Task.objects.filter(id=ID).delete()
+                counts += 1
             except:
                 continue
-        return Response(str(len(ids)) + " tasks deleted successfully.",
+        return Response(str(counts) + " tasks deleted successfully.",
                         status=status.HTTP_200_OK)
 
 
