@@ -42,7 +42,12 @@ class UserTasksViewFa(APIView):
         )
         return Response("New task successfully added.", status=status.HTTP_200_OK)
 
-    def delete(self, request):
+
+class UserTaskDelete(APIView):
+    serializer_class = UserTasksSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
         ids = request.data.getlist('ids')
         for ID in ids:
             try:
@@ -51,6 +56,31 @@ class UserTasksViewFa(APIView):
                 continue
         return Response(str(len(ids)) + " tasks deleted successfully.",
                         status=status.HTTP_200_OK)
+
+
+class UserTaskEdit(APIView):
+    serializer_class = UserTasksSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        ids = request.data.getlist('ids')
+        user_tasks = Task.objects.filter(owner__email=request.user.email)
+        for task in user_tasks[::-1]:
+            try:
+                if task.id in ids:
+                    Task.objects.filter(id=task.id).update(
+                        # owner=request.user,
+                        title=request.data.get('title'),
+                        group=request.data.get('group'),
+                        status=request.data.get('status'),
+                        deadline=request.data.get('deadline'),
+                        priority=request.data.get('priority'),
+                        description=request.data.get('description'),
+                    )
+            except:
+                continue
+
+        return Response("Tasks updated successfully.", status=status.HTTP_200_OK)
 
 
 class GetTasksByPriority(APIView):
