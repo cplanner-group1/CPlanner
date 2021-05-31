@@ -42,8 +42,9 @@ class UserTasksViewFa(APIView):
 class UserTaskDelete(APIView):
     serializer_class = UserTasksSerializer
     permission_classes = (IsAuthenticated,)
-    # u have to edit index here!
+
     def post(self, request):
+        # delete all tasks given by id
         ids = request.data.get('deleted')
         counts = 0
         for ID in ids:
@@ -52,8 +53,15 @@ class UserTaskDelete(APIView):
                 counts += 1
             except:
                 continue
-        return Response("با موفقیت حذف شد.",
-                        status=status.HTTP_200_OK)
+        # now rewrite indexes
+        new_index = 0
+        tasks = Task.objects.filter(owner__email=request.user.email).order_by('index')
+        for task in tasks:
+            task.index = new_index
+            task.save()
+            new_index += 1
+
+        return Response("با موفقیت حذف شد.", status=status.HTTP_200_OK)
 
 
 class UserTaskEdit(APIView):
