@@ -21,5 +21,10 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 
+
 # temporary adding student
-admin.site.register(Student)
+class StudentInfoAdmin(admin.ModelAdmin):
+    list_display = ['user', 'university', 'field','entry_year', 'gpa']
+
+
+admin.site.register(Student, StudentInfoAdmin)

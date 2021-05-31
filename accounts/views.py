@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import RegisterSerializer, SetNewPasswordSerializer, ResetPasswordEmailRequestSerializer, \
     EmailVerificationSerializer, LoginSerializer, LogoutSerializer, StudentInfoSerializer
-from .models import User
+from .models import User, Student
 from .renderers import UserRenderer
 from .utils import Util
 
@@ -47,8 +47,10 @@ class RegisterView(generics.GenericAPIView):
                      ' Use the link below to verify your email \n' + absurl
         data = {'email_body': email_body, 'to_email': user.email,
                 'email_subject': 'Verify your email'}
-
         Util.send_email(data)
+
+        Student(user=user).save()
+
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 
@@ -159,9 +161,31 @@ class LogoutAPIView(generics.GenericAPIView):
         return Response("Logout successfully.", status=status.HTTP_204_NO_CONTENT)
 
 
-class StudentInfo(views.APIView):
+class StudentInfoView(views.APIView):
     serializer_class = StudentInfoSerializer
     permission_classes = (IsAuthenticated,)
 
+    def get(self, request):
+        student = Student.objects.get(user=request.user)
+        student_info = {
+            'university': student.university,
+            'field': student.field,
+            'entry_year': student.entry_year,
+            'gpa': student.gpa,
+            'taken_units': student.taken_units,
+            'passed_units': student.passed_units,
+        }
+        return Response(student_info, status=status.HTTP_200_OK)
+
     def post(self, request):
-        pass
+        student = Student.objects.get(user=request.user)
+
+        student.university = request.data.get('university')
+        student.field = request.data.get('field')
+        student.entry_year = request.data.get('entry_year')
+        student.gpa = round(request.data.get('gpa'), 2)
+        student.taken_units = request.data.get('taken_units')
+        student.passed_units = request.data.get('passed_units')
+        student.save()
+
+        return Response("Student information updated.", status=status.HTTP_200_OK)

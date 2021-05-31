@@ -144,6 +144,5 @@ class LogoutSerializer(serializers.Serializer):
 class StudentInfoSerializer(serializers.Serializer):
     class Meta:
         model = Student
-        fields = ['user', 'first_name', 'last_name',
-                  'university', 'faculty', 'field',
-                  'entry_year', 'gpa', 'taken_units', 'passed_units']
+        fields = ['user', 'university', 'field', 'entry_year',
+                  'gpa', 'taken_units', 'passed_units']

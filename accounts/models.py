@@ -41,6 +41,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255, blank=False,
         null=False, default=AUTH_PROVIDERS.get('email'))
 
+    first_name = models.CharField(max_length=50, default='')
+    last_name = models.CharField(max_length=50, default='')
+    # birthday = models.DateField()
+    # phone_number
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
@@ -58,18 +63,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Student(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='student_user')
-    first_name = models.CharField(max_length=100, default='')
-    last_name = models.CharField(max_length=100, default='')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_user')
 
     university = models.CharField(max_length=100, default='')
     field = models.CharField(max_length=100, default='')
-    entry_year = models.IntegerField()
-    gpa = models.FloatField()
-    taken_units = models.IntegerField()
-    passed_units = models.IntegerField()
-
-    # birthday = models.DateField()
-    # phone_number
-
+    entry_year = models.IntegerField(blank=True, null=True)
+    gpa = models.FloatField(blank=True, null=True)
+    taken_units = models.IntegerField(blank=True, null=True)
+    passed_units = models.IntegerField(blank=True, null=True)
 
