@@ -23,9 +23,10 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
 
-# temporary adding student
+
 class StudentInfoAdmin(admin.ModelAdmin):
-    list_display = ['user', 'university', 'field', 'entry_year']
+    list_display = ['user', 'university', 'field',
+                    'entry_year', 'total_gpa']
 
 
 admin.site.register(Student, StudentInfoAdmin)

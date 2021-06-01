@@ -68,8 +68,10 @@ class Student(models.Model):
     university = models.CharField(max_length=100, default='')
     field = models.CharField(max_length=100, default='')
     entry_year = models.IntegerField(default=0)
+
     total_gpa = models.FloatField(default=0)
     last_semester_gpa = models.FloatField(default=0)
+
     taken_units = models.IntegerField(default=0)
     passed_units = models.IntegerField(default=0)
     total_units = models.IntegerField(default=0)
