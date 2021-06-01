@@ -1,6 +1,6 @@
 from tasks.models import Task
 from tasks.serializers import UserTasksSerializer
-
+from datetime import datetime
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -71,22 +71,19 @@ class UserTasksEdit(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        update_tasks = request.data.get('data')
-        user_tasks = Task.objects.filter(owner__email=request.user.email)
-        for task in user_tasks[::-1]:
-            try:
-                if task.id in update_tasks:
-                    Task.objects.filter(id=task.id).update(
-                        # owner=request.user,
-                        title=request.data.get('title'),
-                        group=request.data.get('group'),
-                        status=request.data.get('status'),
-                        deadline=request.data.get('deadline'),
-                        priority=request.data.get('priority'),
-                        description=request.data.get('description'),
-                    )
-            except:
-                continue
+        update_tasks = list(request.data.get('data'))
+        for task in update_tasks:
+            # try:
+                current_task = Task.objects.get(id=task['id'])
+                current_task.title = task['title']
+                current_task.group = task['group']
+                current_task.status = task['status']
+                current_task.deadline = datetime.strptime(task['deadline'], "%Y-%m-%d %H:%M:%S")
+                current_task.priority = task['priority']
+                current_task.description = task['description']
+                current_task.save()
+            # except:
+                # return Response("Updating Tasks Failed.", status=status.HTTP_200_OK)
 
         return Response("Tasks updated successfully.", status=status.HTTP_200_OK)
 
