@@ -13,7 +13,7 @@ class UserTasksViewFa(APIView):
 
     def get(self, request):
         # ordered by index
-        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('index')
+        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
         result = []
         for task in user_tasks[::-1]:
             result.append({
@@ -44,6 +44,7 @@ class UserTaskDelete(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
+
         # delete all tasks given by id
         ids = request.data.get('deleted')
         counts = 0
@@ -53,9 +54,10 @@ class UserTaskDelete(APIView):
                 counts += 1
             except:
                 continue
+
         # now rewrite indexes
         new_index = 0
-        tasks = Task.objects.filter(owner__email=request.user.email).order_by('index')
+        tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
         for task in tasks:
             task.index = new_index
             task.save()
@@ -64,8 +66,8 @@ class UserTaskDelete(APIView):
         return Response("با موفقیت حذف شد.", status=status.HTTP_200_OK)
 
 
-class UserTaskEdit(APIView):
-    serializer_class = UserTasksSerializer
+class UserTasksEdit(APIView):
+    # serializer_class = UserTasksSerializer
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
@@ -87,6 +89,35 @@ class UserTaskEdit(APIView):
                 continue
 
         return Response("Tasks updated successfully.", status=status.HTTP_200_OK)
+
+
+class UserTaskDragDrop(APIView):
+    serializer_class = UserTasksSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        # task_id = request.data.get('id')
+        old_index = request.data.get('old')
+        new_index = request.data.get('new')
+
+        tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
+
+        tasks[old_index].index = new_index
+        tasks[old_index].save()
+
+        if old_index < new_index:
+            i = old_index + 1
+            while i <= new_index:
+                tasks[i].index -= 1
+                tasks[i].save()
+                i += 1
+
+        elif new_index < old_index:
+            i = new_index
+            while i < old_index:
+                tasks[i].index += 1
+                tasks[i].save()
+                i += 1
 
 
 class GetTasksByPriority(APIView):

@@ -168,12 +168,14 @@ class StudentInfoView(views.APIView):
     def get(self, request):
         student = Student.objects.get(user=request.user)
         student_info = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
             'university': student.university,
             'field': student.field,
             'entry_year': student.entry_year,
-            'gpa': student.gpa,
-            'taken_units': student.taken_units,
-            'passed_units': student.passed_units,
+            'total_gpa': student.total_gpa,
+            'last_semester_gpa': student.last_semester_gpa,
+            'total_units': student.total_units,
         }
         return Response(student_info, status=status.HTTP_200_OK)
 
@@ -183,9 +185,7 @@ class StudentInfoView(views.APIView):
         student.university = request.data.get('university')
         student.field = request.data.get('field')
         student.entry_year = request.data.get('entry_year')
-        student.gpa = round(request.data.get('gpa'), 2)
-        student.taken_units = request.data.get('taken_units')
-        student.passed_units = request.data.get('passed_units')
+        student.total_gpa = round(request.data.get('gpa'), 2)
         student.save()
 
         return Response("Student information updated.", status=status.HTTP_200_OK)

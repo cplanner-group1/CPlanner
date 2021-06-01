@@ -145,4 +145,5 @@ class StudentInfoSerializer(serializers.Serializer):
     class Meta:
         model = Student
         fields = ['user', 'university', 'field', 'entry_year',
-                  'gpa', 'taken_units', 'passed_units']
+                  'total_gpa', 'last_semester_gpa',
+                  'total_units', 'taken_units', 'passed_units']
