@@ -103,10 +103,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dbqusq0o4v1uuc',
-        'USER': 'cieqnlihpljwki',
-        'PASSWORD': 'dab0c20cbaf9ce0dc5e9e147f96e12be19d5cc1d1d4e045720074dc36072f3a8',
-        'HOST': 'ec2-54-78-36-245.eu-west-1.compute.amazonaws.com',
+        'NAME': 'd89sshvejbm34s',
+        'USER': 'dtlyaykzgmucio',
+        'PASSWORD': '49a672575c6971c20dba7e170cb2b008066a21a4f990c07b82f40a4e499855cc',
+        'HOST': 'ec2-34-242-89-204.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
 }
