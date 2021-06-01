@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import User, Student
+from django.contrib.auth.models import Group
 from rest_framework_simplejwt.token_blacklist.admin import OutstandingTokenAdmin
 from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 
@@ -20,7 +21,7 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
-
+admin.site.unregister(Group)
 
 # temporary adding student
 class StudentInfoAdmin(admin.ModelAdmin):
