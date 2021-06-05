@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
     'accounts.apps.AccountsConfig',
     'tasks.apps.TasksConfig',
+    'charts.apps.ChartsConfig',
 ]
 
 SWAGGER_SETTINGS = {
