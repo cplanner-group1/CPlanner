@@ -76,9 +76,9 @@ class UserTasksEdit(APIView):
             # try:
                 current_task = Task.objects.get(id=task['id'])
                 current_task.title = task['title']
-                current_task.group = task['group']
+                current_task.group = task['owner']
                 current_task.status = task['status']
-                current_task.deadline = datetime.strptime(task['deadline'], "%Y-%m-%d %H:%M:%S")
+                current_task.deadline = datetime.strptime(task['deadlineDateTime'], "%Y-%m-%d %H:%M:%S")
                 current_task.priority = task['priority']
                 current_task.description = task['description']
                 current_task.save()
