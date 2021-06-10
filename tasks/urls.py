@@ -4,6 +4,7 @@ from tasks import views
 
 urlpatterns = [
     path('', views.UserTasksViewFa.as_view(), name='user_tasks'),
+    path('add/', views.UserTasksAdd.as_view(), name='user_tasks_add'),
     path('edit/', views.UserTasksEdit.as_view(), name='user_tasks_edit'),
     path('delete/', views.UserTaskDelete.as_view(), name='user_tasks_delete'),
     path('dragdrop/', views.UserTaskDragDrop.as_view(), name='user_task_dragdrop'),

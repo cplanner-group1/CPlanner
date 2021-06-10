@@ -31,14 +31,18 @@ class UserTasksViewFa(APIView):
             })
         return Response({'tasks_list': result}, status=status.HTTP_200_OK)
 
-    def post(self, request):
+
+class UserTasksAdd(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
         ind = Task.objects.all().filter(owner__email=request.user.email).count()
         task = Task.objects.create(
             owner=request.user,
             index=ind,
             datetime=datetime.now()
         )
-        return Response([task.id, task.deadline], status=status.HTTP_200_OK)
+        return Response({'id': task.id, 'date': task.deadline}, status=status.HTTP_200_OK)
 
 
 class UserTaskDelete(APIView):
@@ -87,7 +91,6 @@ class UserTasksEdit(APIView):
                 return Response(update_tasks, status=status.HTTP_200_OK)
             # except:
             #     return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
-
 
 
 class UserTaskDragDrop(APIView):
