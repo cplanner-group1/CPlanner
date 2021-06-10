@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.http import JsonResponse
 
 
 class UserTasksViewFa(APIView):
@@ -37,7 +38,7 @@ class UserTasksViewFa(APIView):
             index=ind,
             datetime=datetime.now()
         )
-        return Response({"id": task.id, "date": task.deadline}, status=status.HTTP_200_OK)
+        return JsonResponse({"id": task.id, "date": task.deadline}, status=status.HTTP_200_OK)
 
 
 class UserTaskDelete(APIView):
