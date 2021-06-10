@@ -49,11 +49,11 @@ class UserTaskDelete(APIView):
         ids = request.data.get('deleted')
         counts = 0
         for ID in ids:
-            try:
+            # try:
                 Task.objects.filter(id=ID).delete()
                 counts += 1
-            except:
-                continue
+            # except:
+            #    continue
 
         # now rewrite indexes
         new_index = 0
@@ -78,7 +78,7 @@ class UserTasksEdit(APIView):
                 current_task.title = task['title']
                 current_task.group = task['owner']
                 current_task.status = task['status']
-                current_task.deadline = datetime.strptime(task['deadlineDateTime'], "%Y-%m-%d %H:%M:%S")
+                current_task.deadline = datetime.strptime(task['deadlineDateTime']+":00", "%Y-%m-%d %H:%M:%S")
                 current_task.priority = task['priority']
                 current_task.description = task['description']
                 current_task.save()
@@ -115,6 +115,8 @@ class UserTaskDragDrop(APIView):
                 tasks[i].index += 1
                 tasks[i].save()
                 i += 1
+
+        return Response("Swtiched", status=status.HTTP_200_OK)
 
 
 class GetTasksByPriority(APIView):
