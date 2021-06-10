@@ -73,7 +73,7 @@ class UserTasksEdit(APIView):
     def post(self, request):
         update_tasks = list(request.data.get('data'))
         for task in update_tasks:
-            try:
+            # try:
                 current_task = Task.objects.get(id=task['id'])
                 current_task.title = task['title']
                 current_task.group = task['owner']
@@ -83,8 +83,8 @@ class UserTasksEdit(APIView):
                 current_task.description = task['description']
                 current_task.save()
                 return Response(update_tasks, status=status.HTTP_200_OK)
-            except:
-                return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
+            # except:
+            #     return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
 
 
 
