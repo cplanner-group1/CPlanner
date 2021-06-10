@@ -111,13 +111,17 @@ class UserTaskDragDrop(APIView):
         temp.save()
 
         if old_index < new_index:
-            i = old_index + 1
-            while i <= new_index:
-                temp = tasks.get(index=i)
-                temp.index -= 1
-                temp.save()
-                rs += str(i) + " " + str(i - 1) + ", "
-                i += 1
+            try:
+                i = old_index + 1
+                while i <= new_index:
+                        temp = tasks.get(index=i)
+                        temp.index -= 1
+                        temp.save()
+                        rs += str(i) + " " + str(i - 1) + ", "
+                        i += 1
+            except:
+                return Response(rs, status=status.HTTP_200_OK)
+
 
         elif new_index < old_index:
             i = old_index - 1
