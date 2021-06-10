@@ -13,7 +13,7 @@ class UserTasksViewFa(APIView):
 
     def get(self, request):
         # ordered by index
-        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('index')
+        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
         result = []
         for task in user_tasks[::-1]:
             result.append({
@@ -82,11 +82,10 @@ class UserTasksEdit(APIView):
                 current_task.priority = task['priority']
                 current_task.description = task['description']
                 current_task.save()
-                return Response("تغییرات با موفقیت انجام شد.", status=status.HTTP_200_OK)
+                return Response(update_tasks, status=status.HTTP_200_OK)
             except:
                 return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
 
-        return Response("Tasks updated successfully.", status=status.HTTP_200_OK)
 
 
 class UserTaskDragDrop(APIView):
