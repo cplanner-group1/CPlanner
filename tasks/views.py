@@ -13,7 +13,7 @@ class UserTasksViewFa(APIView):
 
     def get(self, request):
         # ordered by index
-        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
+        user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('index')
         result = []
         for task in user_tasks[::-1]:
             result.append({
@@ -32,11 +32,11 @@ class UserTasksViewFa(APIView):
 
     def post(self, request):
         ind = Task.objects.all().filter(owner__email=request.user.email).count()
-        Task.objects.create(
+        task = Task.objects.create(
             owner=request.user,
             index=ind
         )
-        return Response("New empty task added.", status=status.HTTP_200_OK)
+        return Response(task.id, status=status.HTTP_200_OK)
 
 
 class UserTaskDelete(APIView):
@@ -73,7 +73,7 @@ class UserTasksEdit(APIView):
     def post(self, request):
         update_tasks = list(request.data.get('data'))
         for task in update_tasks:
-            # try:
+            try:
                 current_task = Task.objects.get(id=task['id'])
                 current_task.title = task['title']
                 current_task.group = task['owner']
@@ -82,8 +82,9 @@ class UserTasksEdit(APIView):
                 current_task.priority = task['priority']
                 current_task.description = task['description']
                 current_task.save()
-            # except:
-                # return Response("Updating Tasks Failed.", status=status.HTTP_200_OK)
+                return Response("تغییرات با موفقیت انجام شد.", status=status.HTTP_200_OK)
+            except:
+                return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
 
         return Response("Tasks updated successfully.", status=status.HTTP_200_OK)
 
