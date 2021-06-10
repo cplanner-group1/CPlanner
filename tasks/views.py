@@ -90,9 +90,9 @@ class UserTasksEdit(APIView):
                 current_task.priority = task['priority']
                 current_task.description = task['description']
                 current_task.save()
-                return Response(update_tasks, status=status.HTTP_200_OK)
             # except:
             #     return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
+        return Response(update_tasks, status=status.HTTP_200_OK)
 
 
 class UserTaskDragDrop(APIView):
