@@ -114,16 +114,16 @@ class UserTaskDragDrop(APIView):
             while i <= new_index:
                 tasks.get(index=i).index -= 1
                 tasks.get(index=i).save()
+                rs += str(i) + " " + str(i - 1) + ", "
                 i += 1
-                rs += str(i-1) + " " + str(i) + ", "
 
         elif new_index < old_index:
             i = old_index - 1
             while i >= new_index:
                 tasks.get(index=i).index += 1
                 tasks.get(index=i).save()
-                i -= 1
                 rs += str(i) + " " + str(i + 1) + ", "
+                i -= 1
 
         tasks.get(index=old_index).index = new_index
         tasks[old_index].save()
