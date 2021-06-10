@@ -52,20 +52,19 @@ class UserTaskDelete(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-
         # delete all tasks given by id
         ids = request.data.get('deleted')
         counts = 0
         for ID in ids:
-            # try:
+            try:
                 Task.objects.filter(id=ID).delete()
                 counts += 1
-            # except:
-            #    continue
+            except:
+               continue
 
         # now rewrite indexes
         new_index = 0
-        tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
+        tasks = Task.objects.filter(owner__email=request.user.email).order_by('index')
         for task in tasks:
             task.index = new_index
             task.save()
