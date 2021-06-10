@@ -103,7 +103,7 @@ class UserTaskDragDrop(APIView):
         # task_id = request.data.get('id')
         old_index = request.data.get('old')
         new_index = request.data.get('new')
-
+        rs = str(old_index) + " -1, "
         tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
 
         tasks.get(index=old_index).index = -1
@@ -115,6 +115,7 @@ class UserTaskDragDrop(APIView):
                 tasks.get(index=i).index -= 1
                 tasks.get(index=i).save()
                 i += 1
+                rs += str(i-1) + " " + str(i) + ", "
 
         elif new_index < old_index:
             i = old_index - 1
@@ -122,11 +123,12 @@ class UserTaskDragDrop(APIView):
                 tasks.get(index=i).index += 1
                 tasks.get(index=i).save()
                 i -= 1
+                rs += str(i) + " " + str(i + 1) + ", "
 
         tasks.get(index=old_index).index = new_index
         tasks[old_index].save()
 
-        return Response("Swtiched", status=status.HTTP_200_OK)
+        return Response(rs, status=status.HTTP_200_OK)
 
 
 class GetTasksByPriority(APIView):
