@@ -38,7 +38,7 @@ class UserTasksViewFa(APIView):
             index=ind,
             datetime=datetime.now()
         )
-        return JsonResponse({"id": task.id, "date": task.deadline}, status=status.HTTP_200_OK)
+        return Response([task.id, task.deadline], status=status.HTTP_200_OK)
 
 
 class UserTaskDelete(APIView):
