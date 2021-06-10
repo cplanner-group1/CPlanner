@@ -40,9 +40,11 @@ class UserTasksAdd(APIView):
         task = Task.objects.create(
             owner=request.user,
             index=ind,
-            datetime=datetime.now()
+            deadline=datetime.now()
         )
-        return Response({'id': task.id, 'date': task.deadline}, status=status.HTTP_200_OK)
+        return Response({'id': task.id,
+                         'date': task.deadline.strftime("%Y-%m-%d %H:%M:%S")},
+                        status=status.HTTP_200_OK)
 
 
 class UserTaskDelete(APIView):
