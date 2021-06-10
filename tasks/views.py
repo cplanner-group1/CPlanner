@@ -103,7 +103,7 @@ class UserTaskDragDrop(APIView):
         # task_id = request.data.get('id')
         old_index = request.data.get('old')
         new_index = request.data.get('new')
-        rs = str(old_index) + " -1, "
+
         tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
 
         temp = tasks.get(index=old_index)
@@ -111,17 +111,12 @@ class UserTaskDragDrop(APIView):
         temp.save()
 
         if old_index < new_index:
-            try:
-                i = old_index + 1
-                while i <= new_index:
-                        temp = tasks.get(index=i)
-                        temp.index -= 1
-                        temp.save()
-                        rs += str(i) + " " + str(i - 1) + ", "
-                        i += 1
-            except:
-                return Response(rs, status=status.HTTP_200_OK)
-
+            i = old_index + 1
+            while i <= new_index:
+                temp = tasks.get(index=i)
+                temp.index -= 1
+                temp.save()
+                i += 1
 
         elif new_index < old_index:
             i = old_index - 1
@@ -129,14 +124,13 @@ class UserTaskDragDrop(APIView):
                 temp = tasks.get(index=i)
                 temp.index += 1
                 temp.save()
-                rs += str(i) + " " + str(i + 1) + ", "
                 i -= 1
 
         temp = tasks.get(index=-1)
         temp.index = new_index
         temp.save()
 
-        return Response(rs, status=status.HTTP_200_OK)
+        return Response("جابجایی با موفقیت انجام شد.", status=status.HTTP_200_OK)
 
 
 class GetTasksByPriority(APIView):
