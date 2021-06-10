@@ -81,7 +81,7 @@ class UserTasksEdit(APIView):
     def post(self, request):
         update_tasks = list(request.data.get('data'))
         for task in update_tasks:
-            # try:
+             try:
                 current_task = Task.objects.get(id=task['id'])
                 current_task.title = task['title']
                 current_task.group = task['owner']
@@ -90,13 +90,13 @@ class UserTasksEdit(APIView):
                 current_task.priority = task['priority']
                 current_task.description = task['description']
                 current_task.save()
-            # except:
-            #     return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
-        return Response(update_tasks, status=status.HTTP_200_OK)
+             except:
+                 return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
+        return Response("تغییرات با موفقیت ثبت شد.", status=status.HTTP_200_OK)
 
 
 class UserTaskDragDrop(APIView):
-    serializer_class = UserTasksSerializer
+    # serializer_class = UserTasksSerializer
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
@@ -104,7 +104,7 @@ class UserTaskDragDrop(APIView):
         old_index = request.data.get('old')
         new_index = request.data.get('new')
 
-        tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
+        tasks = list(Task.objects.filter(owner__email=request.user.email).order_by('-index'))
 
         tasks[old_index].index = new_index
         tasks[old_index].save()
