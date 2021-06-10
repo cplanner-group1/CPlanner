@@ -106,27 +106,31 @@ class UserTaskDragDrop(APIView):
         rs = str(old_index) + " -1, "
         tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
 
-        tasks.get(index=old_index).index = -1
-        tasks[old_index].save()
+        temp = tasks.get(index=old_index)
+        temp.index = -1
+        temp.save()
 
         if old_index < new_index:
             i = old_index + 1
             while i <= new_index:
-                tasks.get(index=i).index -= 1
-                tasks.get(index=i).save()
+                temp = tasks.get(index=i)
+                temp.index -= 1
+                temp.save()
                 rs += str(i) + " " + str(i - 1) + ", "
                 i += 1
 
         elif new_index < old_index:
             i = old_index - 1
             while i >= new_index:
-                tasks.get(index=i).index += 1
-                tasks.get(index=i).save()
+                temp = tasks.get(index=i)
+                temp.index += 1
+                temp.save()
                 rs += str(i) + " " + str(i + 1) + ", "
                 i -= 1
 
-        tasks.get(index=old_index).index = new_index
-        tasks[old_index].save()
+        temp = tasks.get(index=-1)
+        temp.index = new_index
+        temp.save()
 
         return Response(rs, status=status.HTTP_200_OK)
 
