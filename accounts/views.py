@@ -180,18 +180,22 @@ class StudentInfoView(views.APIView):
         return Response(student_info, status=status.HTTP_200_OK)
 
     def post(self, request):
-        user = request.user
-        user.first_name = request.data.get('first_name')
-        user.last_name = request.data.get('last_name')
-        user.save()
+        try:
+            user = request.user
+            user.first_name = request.data.get('first_name')
+            user.last_name = request.data.get('last_name')
+            user.save()
 
-        student = Student.objects.get(user=request.user)
-        student.university = request.data.get('university')
-        student.field = request.data.get('field')
-        student.entry_year = request.data.get('entry_year')
-        student.total_gpa = round(request.data.get('total_gpa'), 2)
-        student.last_semester_gpa = round(request.data.get('last_semester_gpa'), 2)
-        student.total_units = request.data.get('total_units')
-        student.save()
-
-        return Response("Student information updated.", status=status.HTTP_200_OK)
+            student = Student.objects.get(user=request.user)
+            student.university = request.data.get('university')
+            student.field = request.data.get('field')
+            student.entry_year = request.data.get('entry_year')
+            student.total_gpa = round(request.data.get('total_gpa'), 2)
+            student.last_semester_gpa = round(request.data.get('last_semester_gpa'), 2)
+            student.total_units = request.data.get('total_units')
+            student.save()
+            return Response("تغییرات با موفقیت ثبت شد.", status=status.HTTP_200_OK)
+        except:
+            return Response("مشکلی در ثبت تغییرات وجود دارد.\n"
+                            "پس از مدتی دوباره امتحان کنید,\n"
+                            "یا با مدیریت سایت تماس حاصل فرمایید.", status=status.HTTP_200_OK)
