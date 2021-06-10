@@ -34,9 +34,10 @@ class UserTasksViewFa(APIView):
         ind = Task.objects.all().filter(owner__email=request.user.email).count()
         task = Task.objects.create(
             owner=request.user,
-            index=ind
+            index=ind,
+            datetime=datetime.now()
         )
-        return Response(task.id, status=status.HTTP_200_OK)
+        return Response({"id": task.id, "date": task.deadline}, status=status.HTTP_200_OK)
 
 
 class UserTaskDelete(APIView):
