@@ -92,7 +92,7 @@ class UserCTsEdit(APIView):
     def post(self, request):
         update_courses = list(request.data.get('data'))
         for course in update_courses:
-             try:
+             # try:
                 current_course = CourseTracker.objects.get(id=course['course']['id'])
                 current_course.title = course['course']['title']
                 current_course.grade = course['grade']
@@ -101,8 +101,8 @@ class UserCTsEdit(APIView):
                 current_course.unit = course['unit']
                 current_course.description = course['description']
                 current_course.save()
-             except:
-                 return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
+             # except:
+                 #return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
         return Response("تغییرات با موفقیت ثبت شد.", status=status.HTTP_200_OK)
 
 
