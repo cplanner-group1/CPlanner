@@ -93,8 +93,8 @@ class UserCTsEdit(APIView):
         update_courses = list(request.data.get('data'))
         for course in update_courses:
              try:
-                current_course = CourseTracker.objects.get(id=course['id'])
-                current_course.title = course['title']
+                current_course = CourseTracker.objects.get(id=course['course']['id'])
+                current_course.title = course['course']['title']
                 current_course.grade = course['grade']
                 current_course.status = course['status']
                 current_course.label = course['label']

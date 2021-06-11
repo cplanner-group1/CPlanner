@@ -12,8 +12,9 @@ class CourseTracker(models.Model):
     status = models.IntegerField(default=0)
     grade = models.FloatField(default=0)
     label = models.IntegerField(default=0)
+    # primary = 0, optional = 1
     description = models.TextField(max_length=300, default='')
-    unit = models.IntegerField(default=0)
+    unit = models.IntegerField(default=3)
     # checklist = models.BooleanField(default=false)
 
     def __str__(self):
