@@ -86,7 +86,7 @@ class UserCTDelete(APIView):
         return Response("با موفقیت حذف شد.", status=status.HTTP_200_OK)
 
 
-class UserTasksEdit(APIView):
+class UserCTsEdit(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
@@ -106,7 +106,7 @@ class UserTasksEdit(APIView):
         return Response("تغییرات با موفقیت ثبت شد.", status=status.HTTP_200_OK)
 
 
-class UserTaskDragDrop(APIView):
+class UserCTDragDrop(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
