@@ -6,8 +6,9 @@ from accounts.models import User
 # user courses just like tasks
 class CourseTracker(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='course_tracker_owner')
+    index = models.IntegerField(default=0)
     title = models.CharField(max_length=100)
-    prerequisites = ArrayField(models.CharField(max_length=100))  # list of course titles
+    # prerequisites = ArrayField(models.CharField(max_length=100))  # list of course titles
     status = models.IntegerField(default=0)
     grade = models.FloatField(default=0)
     label = models.IntegerField(default=0)

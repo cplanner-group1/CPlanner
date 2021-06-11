@@ -3,7 +3,7 @@ from .models import Chart, Course, CourseTracker
 
 
 class CourseTrackerAdmin(admin.ModelAdmin):
-    list_display = ['owner', 'title', 'unit', 'prerequisites',
+    list_display = ['owner', 'title', 'unit',
                     'status', 'grade', 'label']
 
 

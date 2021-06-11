@@ -5,7 +5,7 @@ from rest_framework import serializers
 class CourseTrackerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Chart
-        fields = ['owner', 'title', 'prerequisites', 'status',
+        fields = ['owner', 'title', 'index', 'status',
                   'grade', 'label', 'description', 'unit']
 
 

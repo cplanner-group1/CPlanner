@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
+# Charts
 class ChartsView(APIView):
     serializer_class = ChartSerializer
     permission_classes = (IsAuthenticated,)
@@ -26,89 +27,117 @@ class ChartsView(APIView):
         return Response({'courses': result}, status=status.HTTP_200_OK)
 
 
+# CourseTracker
 class UserCourseTrackerView(APIView):
-    serializer_class = CourseSerializer
+    serializer_class = CourseTrackerSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get_all(self, request):  # sends all of users coursetrackers
-        user_coursetrackers = CourseTracker.objects.filter(owner__email=request.user.email)
+    def get(self, request):
+        # ordered by index
+        user_courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('-index')
         result = []
-        for ct in user_coursetrackers[::-1]:
+        for course in user_courses[::-1]:
             result.append({
-                'user': request.user.email,
-                'id': ct.id,
-                'course': ct.course,
-                'prerequisites': ct.prerequisites,
-                'status': ct.status,
-                'grade': ct.grade,
-                'label': ct.label,
-                'description': ct.description,
-                'unit': ct.unit
+                'title': course.title,
+                'grade': course.grade,
+                'unit': course.unit,
+                'status': course.status,
+                'label': course.label,
+                'description': course.description,
+                'index': course.index,
+                'id': course.id
             })
-        return Response({'ct_list': result}, status=status.HTTP_200_OK)
+        return Response({'data': result}, status=status.HTTP_200_OK)
 
-    def get(self, request):  # sends one specific coursetrackers
-        ids = request.data.getlist('ids')
-        ct = CourseTracker.objects.filter(id=ids)
-        result = [{
-                'user': request.user.email,
-                'id': ct.id,
-                'course': ct.course,
-                'prerequisites': ct.prerequisites,
-                'status': ct.status,
-                'grade': ct.grade,
-                'label': ct.label,
-                'description': ct.description,
-                'unit': ct.unit
-                }]
-        return Response({'coursetracker': result}, status=status.HTTP_200_OK)
 
-    def post(self, request):  # adds one coursetracker for user (if it does not cause loop in prerequisites.)
-        user_coursetrackers = CourseTracker.objects.filter(owner__email=request.user.email)
-        loop = 0
-        queue = [request.data.get('course')]
-        visited = [request.data.get('course')]
-        while queue:
-            s = queue.pop(0)
-            for j in s.prerequisites:
-                if j not in visited:
-                    visited.append(j)
-                    queue.append(j)
-                else:
-                    loop = j.title
-        if loop == 0:
-            CourseTracker.objects.append(
-                user_id=request.user.email,
-                id=request.data.get('id'),
-                course=request.data.get('course'),
-                prerequisites=request.data.get('prerequisites'),
-                status=request.data.get('status'),
-                grade=request.data.get('grade'),
-                label=request.data.get('label'),
-                description=request.data.get('description'),
-                unit=request.data.get('unit')
-            )
-            return Response("New Course successfully added.", status=status.HTTP_200_OK)
-        else:
-            return Response("could not add course because it causes a Loop in prerequisites.", status=status.HTTP_200_OK)
+class UserCTAdd(APIView):
+    permission_classes = (IsAuthenticated,)
 
-    def delete(self, request):  # delete removes the coursetracker created for user
-        ids = request.data.getlist('ids')
-        try:
-            CourseTracker.objects.filter(id=ids).delete()
-        except:
-            return Response("Could not delete Course.",
-                            status=status.HTTP_200_OK)
-        return Response("Course deleted successfully.",
-                        status=status.HTTP_200_OK)
+    def get(self, request):
+        ind = CourseTracker.objects.all().filter(owner__email=request.user.email).count()
+        course = CourseTracker.objects.create(
+            owner=request.user,
+            index=ind,
+        )
+        return Response({'id': course.id}, status=status.HTTP_200_OK)
 
-    def delete_all(self, request):  # delete all of users course
-        user_ct = CourseTracker.objects.filter(owner__email=request.user.email)
-        try:
-            user_ct.all().delete()
-        except:
-            return Response("Could not delete course.",
-                            status=status.HTTP_200_OK)
-        return Response("course deleted successfully.",
-                        status=status.HTTP_200_OK)
 
+class UserCTDelete(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        ids = request.data.get('deleted')
+        counts = 0
+        for ID in ids:
+            try:
+                CourseTracker.objects.filter(id=ID).delete()
+                counts += 1
+            except:
+               continue
+
+        # now rewrite indexes
+        new_index = 0
+        courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('index')
+        for course in courses:
+            course.index = new_index
+            course.save()
+            new_index += 1
+
+        return Response("با موفقیت حذف شد.", status=status.HTTP_200_OK)
+
+
+class UserTasksEdit(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        update_courses = list(request.data.get('data'))
+        for course in update_courses:
+             try:
+                current_course = CourseTracker.objects.get(id=course['id'])
+                current_course.title = course['title']
+                current_course.grade = course['grade']
+                current_course.status = course['status']
+                current_course.label = course['label']
+                current_course.unit = course['unit']
+                current_course.description = course['description']
+                current_course.save()
+             except:
+                 return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
+        return Response("تغییرات با موفقیت ثبت شد.", status=status.HTTP_200_OK)
+
+
+class UserTaskDragDrop(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        # task_id = request.data.get('id')
+        old_index = request.data.get('old')
+        new_index = request.data.get('new')
+
+        courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('-index')
+
+        temp = courses.get(index=old_index)
+        temp.index = -1
+        temp.save()
+
+        if old_index < new_index:
+            i = old_index + 1
+            while i <= new_index:
+                temp = courses.get(index=i)
+                temp.index -= 1
+                temp.save()
+                i += 1
+
+        elif new_index < old_index:
+            i = old_index - 1
+            while i >= new_index:
+                temp = courses.get(index=i)
+                temp.index += 1
+                temp.save()
+                i -= 1
+
+        temp = courses.get(index=-1)
+        temp.index = new_index
+        temp.save()
+
+        return Response("جابجایی با موفقیت انجام شد.", status=status.HTTP_200_OK)
