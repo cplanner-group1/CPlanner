@@ -141,3 +141,23 @@ class UserCTDragDrop(APIView):
         temp.save()
 
         return Response("جابجایی با موفقیت انجام شد.", status=status.HTTP_200_OK)
+
+
+# time table
+class UserTimetableView(APIView):
+    # serializer_class = UserTimetableSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):  # get one specific timetable
+        user_timetable = Timetable.objects.get(owner__user__email=request.user.email)
+        result = {
+            'info': user_timetable.info,
+        }
+        return Response(result, status=status.HTTP_200_OK)
+
+    def post(self, request):  # add timetable for user
+        Timetable.objects.create(
+            owner=request.user,
+            info=request.data.get('info'),
+        )
+        return Response("New timetable successfully saved.", status=status.HTTP_200_OK)
