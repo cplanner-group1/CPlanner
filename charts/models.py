@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from accounts.models import User, Student
-
+from datetime import datetime
 
 # user courses just like tasks
 class CourseTracker(models.Model):
@@ -23,6 +23,12 @@ class CourseTracker(models.Model):
 
 # predefined charts
 class Chart(models.Model):  # created by us only? option for user to create onr?
+    owner = models.ForeignKey(User, on_delete=models.PROTECT, default=0)
+    title = models.CharField(max_length=100, default='')
+    used = models.IntegerField(default=0)
+    # number of users using this chart
+    build_date = models.DateField(default=datetime.today().strftime('%Y-%m-%d'))
+
     university = models.CharField(max_length=100)
     field = models.CharField(max_length=100)
 
@@ -39,6 +45,8 @@ class Course(models.Model):
     # suggested_prerequisites = list()
 
 
+# timetable
 class Timetable(models.Model):
     owner = models.OneToOneField(Student, on_delete=models.CASCADE, default=0)
+    name = models.CharField(max_length=100, default='')
     info = models.TextField()

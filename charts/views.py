@@ -27,6 +27,43 @@ class ChartsView(APIView):
         return Response({'courses': result}, status=status.HTTP_200_OK)
 
 
+class AddChartView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self):
+        pass
+
+
+class SearchChartsView(APIView):
+    # serializer_class = ChartSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):  # recommends charts
+        uni = request.data.get('university')
+        field = request.data.get('field')
+        charts = Chart.objects.filter(university__icontains=uni, field__icontains=field)[:10]
+        # order by what so we return best results?
+        result = []
+        for chart in charts:
+            courses = chart.course_set.all()
+            courses_res = []
+            for course in courses:
+                courses_res.append(course.title)
+
+            result.append({
+                'id': chart.id,
+                'title': chart.title,
+                'used': chart.used,
+                'owner': chart.owner,
+                'university': chart.university,
+                'study': chart.field,
+                'date': chart.build_date,
+                'courses': courses_res
+            })
+
+        return Response({'courses': result}, status=status.HTTP_200_OK)
+
+
 # CourseTracker
 class UserCourseTrackerView(APIView):
     serializer_class = CourseTrackerSerializer
@@ -148,16 +185,21 @@ class UserTimetableView(APIView):
     # serializer_class = UserTimetableSerializer
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):  # get one specific timetable
+    def get(self, request):
+        # get one specific timetable
         user_timetable = Timetable.objects.get(owner__user__email=request.user.email)
         result = {
             'info': user_timetable.info,
         }
         return Response(result, status=status.HTTP_200_OK)
 
-    def post(self, request):  # add timetable for user
+    def post(self, request):
+        # add timetable for user
+        item = request.get('item')
+
         Timetable.objects.create(
             owner=request.user,
+
             info=request.data.get('info'),
         )
         return Response("New timetable successfully saved.", status=status.HTTP_200_OK)
