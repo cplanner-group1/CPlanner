@@ -10,5 +10,8 @@ urlpatterns = [
     path('dragdrop/', views.UserTaskDragDrop.as_view(), name='user_task_dragdrop'),
     path('ordered-by-priority/', views.GetTasksByPriority.as_view(), name='tasks_by_priority'),
     path('ordered-by-deadline/', views.GetTasksByDeadline.as_view(), name='tasks_by_deadline'),
+
+    path('dashboard/', views.DashboardView.as_view(), name='user_dashboard'),
+
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework_tasks'))
 ]

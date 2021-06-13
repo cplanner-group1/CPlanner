@@ -1,4 +1,6 @@
 from tasks.models import Task
+from charts.models import CourseTracker
+from math import floor
 from tasks.serializers import UserTasksSerializer
 from datetime import datetime
 from rest_framework import status
@@ -175,3 +177,41 @@ class GetTasksByDeadline(APIView):
                 'id': task.id
             })
         return Response({'tasks_list': result_by_deadline}, status=status.HTTP_200_OK)
+
+
+# Dashboard
+class DashboardView(APIView):
+    permission_classes = (IsAuthenticated,)
+    # serializer_class = CourseSerializer
+
+    def get(self, request):
+        courses = CourseTracker.objects.filter(id=request.data.get('id'), status=1)
+        unit_sum = 0
+        for c in courses:
+            unit_sum += c.unit
+
+        all_tasks = Task.objects.filter(id=request.data.get('id')).count()
+        p1 = Task.objects.filter(id=request.data.get('id'), priority=1).count()
+        p2 = Task.objects.filter(id=request.data.get('id'), priority=2).count()
+        p3 = Task.objects.filter(id=request.data.get('id'), priority=3).count()
+        s1 = Task.objects.filter(id=request.data.get('id'), status=0).count()
+        s2 = Task.objects.filter(id=request.data.get('id'), status=1).count()
+        s3 = Task.objects.filter(id=request.data.get('id'), status=2).count()
+        result = {
+            'passed': unit_sum,
+            'priority1': p1,
+            'priority2': p2,
+            'priority3': p3,
+            'status1': s1,
+            'status2': s2,
+            'status3': s3,
+            'task_count': all_tasks,
+            'remaining': s1 + s2,
+            'p1': floor(p1 * 100 / all),
+            'p2': floor(p2 * 100 / all),
+            'p3': 100 - floor(p1 * 100 / all) - floor(p2 * 100 / all),
+            's1': floor(s1 * 100 / all),
+            's2': floor(s2 * 100 / all),
+            's3': 100 - floor(s1 * 100 / all) - floor(s2 * 100 / all)
+        }
+        return Response(result, status=status.HTTP_200_OK)
