@@ -291,7 +291,7 @@ class UserCTDragDrop(APIView):
         return Response("جابجایی با موفقیت انجام شد.", status=status.HTTP_200_OK)
 
 
-class UserCTOrderByAlphabet(APIView):
+class UserCTsOrderByAlphabet(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):

@@ -9,6 +9,7 @@ urlpatterns = [
     path('ct/edit/', views.UserCTsEdit.as_view(), name='user_courses_edit'),
     path('ct/delete/', views.UserCTsDelete.as_view(), name='user_courses_delete'),
     path('ct/dragdrop/', views.UserCTDragDrop.as_view(), name='user_course_dragdrop'),
+    path('ct/order/alpha/', views.UserCTsOrderByAlphabet.as_view(), name='user_courses_order_alpha'),
 
     # TimeTable
     path('timetable/', views.UserTimetableView.as_view(), name='user_courses'),
@@ -21,7 +22,7 @@ urlpatterns = [
 
     # Course
     path('course/suggest/', views.CourseAutocompleteView.as_view(), name='suggest_course'),
-    path('course/suggestpre/', views.CourseAutocompleteView.as_view(), name='suggest_course'),
+    path('course/suggest-pre/', views.CourseAutocompleteView.as_view(), name='suggest_course'),
 
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework_CTs'))
 ]
