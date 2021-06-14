@@ -71,30 +71,42 @@ class SuggestPrerequisitesView(APIView):
 
 
 # Charts
-class ChartsView(APIView):
-    serializer_class = ChartSerializer
+class AddChartToCTView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):  # sends a chart and creates coursetrackers per each of it's courses
-        uni = request.data.get('university')
-        field = request.data.get('field')
-        chart = Chart.objects.get(university=uni, field=field)
-        courses = chart.course_set.all()
+    def get(self, request):
+        # delete old courses to overwrite them
+        old_courses = CourseTracker.objects.filter(owner__email=request.user.email)
+        old_courses.delete()
+
+        # now add new courses from given chart
+        ID = request.GET.get('id')
+        chart = Chart.objects.get(id=ID)
+        courses = chart.course_set.all().order_by('title')
         result = []
+        i = 0
         for course in courses:
+            # Create CourseTracker for user
+            added_course = CourseTracker.objects.create(
+                owner=request.user,
+                index=i,
+                title=course.title,
+                label=course.label,
+                unit=course.unit
+            )
+            # Get Course Tracker data to Response
             result.append({
-                'title': course.title,
-                'unit': course.unit,
-                'label': course.label
+                'title': added_course.title,
+                'grade': added_course.grade,
+                'unit': added_course.unit,
+                'status': added_course.status,
+                'label': added_course.label,
+                'description': added_course.description,
+                'index': added_course.index,
+                'id': added_course.id
             })
-        return Response({'courses': result}, status=status.HTTP_200_OK)
-
-
-class AddChartView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, request):
-        pass
+            i += 1
+        return Response({'data': result}, status=status.HTTP_200_OK)
 
 
 class SearchChartsByUFView(APIView):
@@ -276,7 +288,7 @@ class UserCTOrderByAlphabet(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        user_courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('title')
+        user_courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('-title')
         i = 0
         for course in user_courses:
             course.index = i

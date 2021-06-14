@@ -9,12 +9,13 @@ urlpatterns = [
     path('ct/edit/', views.UserCTsEdit.as_view(), name='user_courses_edit'),
     path('ct/delete/', views.UserCTsDelete.as_view(), name='user_courses_delete'),
     path('ct/dragdrop/', views.UserCTDragDrop.as_view(), name='user_course_dragdrop'),
-    path('ct/order/alpha/', views.UserCTOrderByAlphabet.as_view(), name='user_courses_order_alpha'),
 
     # TimeTable
     path('timetable/', views.UserTimetableView.as_view(), name='user_courses'),
 
     # Charts
+    path('add-chart-ct/', views.AddChartToCTView.as_view(), name='add_chart_ct'),
+    path('add-ct-chart/', views.AddChartToCTView.as_view(), name='add_ct_chart'),
     path('search/unif/', views.SearchChartsByUFView.as_view(), name='search_charts'),
     path('search/title/', views.SearchChartsByTView.as_view(), name='search_charts'),
 
