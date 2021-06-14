@@ -109,6 +109,13 @@ class AddChartToCTView(APIView):
         return Response({'data': result}, status=status.HTTP_200_OK)
 
 
+class AddCTToChartView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        return Response("nothing yet", status=status.HTTP_200_OK)
+
+
 class SearchChartsByUFView(APIView):
     # serializer_class = ChartSerializer
     # permission_classes = (IsAuthenticated,)

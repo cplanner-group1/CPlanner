@@ -15,7 +15,7 @@ urlpatterns = [
 
     # Charts
     path('add-chart-ct/', views.AddChartToCTView.as_view(), name='add_chart_ct'),
-    path('add-ct-chart/', views.AddChartToCTView.as_view(), name='add_ct_chart'),
+    path('add-ct-chart/', views.AddCTToChartView.as_view(), name='add_ct_chart'),
     path('search/unif/', views.SearchChartsByUFView.as_view(), name='search_charts'),
     path('search/title/', views.SearchChartsByTView.as_view(), name='search_charts'),
 

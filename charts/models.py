@@ -12,7 +12,7 @@ class CourseTracker(models.Model):
     # prerequisites = ArrayField(models.CharField(max_length=100))  # list of course titles
     status = models.IntegerField(default=0)
     grade = models.FloatField(default=0)
-    label = models.IntegerField(default=0)
+    label = models.CharField(max_length=2, default='0')
     # primary = 0, optional = 1
     description = models.TextField(max_length=300, default='')
     unit = models.IntegerField(default=3)
@@ -42,7 +42,7 @@ class Course(models.Model):
     charts = models.ManyToManyField(Chart)
     title = models.CharField(max_length=100)
     unit = models.IntegerField(default=0)
-    label = models.CharField(max_length=100)
+    label = models.CharField(max_length=2, default='0')
     suggested_prerequisites = models.TextField(default='')
 
 
