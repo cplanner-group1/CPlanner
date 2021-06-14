@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import ArrayField
 from accounts.models import User, Student
 from datetime import datetime
 
+
 # user courses just like tasks
 class CourseTracker(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='course_tracker_owner')
@@ -42,7 +43,7 @@ class Course(models.Model):
     title = models.CharField(max_length=100)
     unit = models.IntegerField(default=0)
     label = models.CharField(max_length=100)
-    # suggested_prerequisites = list()
+    suggested_prerequisites = models.TextField(default='')
 
 
 # timetable

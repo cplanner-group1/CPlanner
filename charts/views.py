@@ -7,6 +7,68 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
+# Course
+class CourseAutocompleteView(APIView):
+    permission_classes = (IsAuthenticated,)
+    # serializer_class = CourseSerializer
+
+    def get(self, request):
+        text = request.data.get('textfield')
+        courses = Course.objects.filter(title__icontains=text)
+        result = []
+        for c in courses:
+            if len(result) <= 10:
+                r = [{
+                    'title': c.title,
+                    'id': c.id
+                }]
+                result.append({r})
+            else:
+                break
+        return Response({'courses': result}, status=status.HTTP_200_OK)
+
+
+class GetCourseView(APIView):  # send course information when user clicks on a autocompleted course option
+    permission_classes = (IsAuthenticated,)
+    # serializer_class = CourseSerializer
+
+    def get(self, request):
+        course = Course.objects.get(id=request.data.get('id'))
+        result = {
+            'course': course.title,
+            'unit': course.unit,
+            'label': course.label,
+            'suggestedPrerequisites': course.suggested_prerequisites,
+        }
+
+        return Response({result}, status=status.HTTP_200_OK)
+
+
+class SuggestPrerequisitesView(APIView):
+    # serializer_class = CourseSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):  # recommends prerequisites
+        title = request.GET.get('course')
+        result = []
+        user_courses = CourseTracker.objects.filter(owner__email=request.user.email)
+        for course in user_courses:
+            if course.title not in result:
+                result.append(course.title)
+            if len(result) == 10:
+                break
+        if len(result) < 10:
+            all_courses = Course.objects.filter(title=title)
+            for course in all_courses:  # need change
+                prerequisites = course.suggested_prerequisites
+                for p in prerequisites:
+                    if p not in result:
+                        result.append(p)
+                if len(result) >= 10:
+                    break
+        return Response({'suggestions': result}, status=status.HTTP_200_OK)
+
+
 # Charts
 class ChartsView(APIView):
     serializer_class = ChartSerializer
@@ -30,7 +92,7 @@ class ChartsView(APIView):
 class AddChartView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def post(self):
+    def post(self, request):
         pass
 
 
@@ -39,8 +101,8 @@ class SearchChartsView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):  # recommends charts
-        uni = request.data.get('university')
-        field = request.data.get('field')
+        uni = request.GET.get('university')
+        field = request.GET.get('field')
         charts = Chart.objects.filter(university__icontains=uni, field__icontains=field)[:10]
         # order by what so we return best results?
         result = []

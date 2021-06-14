@@ -16,5 +16,9 @@ urlpatterns = [
     # Charts
     path('search/', views.SearchChartsView.as_view(), name='search_charts'),
 
+    # Course
+    path('course/suggest/', views.CourseAutocompleteView.as_view(), name='suggest_course'),
+    path('course/suggestpre/', views.CourseAutocompleteView.as_view(), name='suggest_course'),
+
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework_CTs'))
 ]
