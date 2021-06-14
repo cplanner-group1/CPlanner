@@ -9,11 +9,10 @@ class CourseTracker(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='course_tracker_owner')
     index = models.IntegerField(default=0)
     title = models.CharField(max_length=100)
-    # prerequisites = ArrayField(models.CharField(max_length=100))  # list of course titles
+    prerequisites = models.TextField(default='')  # Check it later
     status = models.IntegerField(default=0)
     grade = models.FloatField(default=0)
-    label = models.CharField(max_length=2, default='0')
-    # primary = 0, optional = 1
+    label = models.CharField(max_length=2, default='0')  # primary=0, optional=1
     description = models.TextField(max_length=300, default='')
     unit = models.IntegerField(default=3)
     # checklist = models.BooleanField(default=false)

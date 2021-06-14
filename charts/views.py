@@ -113,7 +113,29 @@ class AddCTToChartView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        return Response("nothing yet", status=status.HTTP_200_OK)
+        user = request.user
+        user_courses = CourseTracker.objects.filter(owner__email=request.user.email)
+        # Create Chart
+        chart_title = request.GET.get('title')
+        new_chart = Chart(
+            owner=user,
+            title=chart_title,
+            university=user.student.university,
+            field=user.student.field
+        )
+        new_chart.save()
+        # Save and add Courses to chart
+        for course in user_courses:
+            temp = Course(
+                title=course.title,
+                unit=course.unit,
+                label=course.label,
+                suggested_prerequisites=course.prerequisites
+            )
+            temp.save()
+            temp.charts.add(new_chart)
+
+        return Response("چارت با موفقیت اضافه شد.", status=status.HTTP_200_OK)
 
 
 class SearchChartsByUFView(APIView):
