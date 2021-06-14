@@ -18,4 +18,4 @@ class CourseSerializer(serializers.HyperlinkedModelSerializer):
 class ChartSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Chart
-        fields = ['university', 'study', 'courses']
+        fields = ['title', 'university', 'field', 'used']

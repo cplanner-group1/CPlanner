@@ -1,11 +1,11 @@
 from charts.models import *
-from charts.serializer import *
+from charts.serializers import *
 
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.http import JsonResponse
 
 # Course
 class CourseAutocompleteView(APIView):
@@ -98,12 +98,12 @@ class AddChartView(APIView):
 
 class SearchChartsView(APIView):
     # serializer_class = ChartSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request):  # recommends charts
         uni = request.GET.get('university')
         field = request.GET.get('field')
-        charts = Chart.objects.filter(university__icontains=uni, field__icontains=field)[:10]
+        charts = Chart.objects.filter(university__icontains=uni, field__icontains=field)
         # order by what so we return best results?
         result = []
         for chart in charts:
@@ -116,14 +116,14 @@ class SearchChartsView(APIView):
                 'id': chart.id,
                 'title': chart.title,
                 'used': chart.used,
-                'owner': chart.owner,
+                'owner': chart.owner.email,
                 'university': chart.university,
                 'study': chart.field,
                 'date': chart.build_date,
                 'courses': courses_res
             })
 
-        return Response({'courses': result}, status=status.HTTP_200_OK)
+        return JsonResponse({'data': result}, status=status.HTTP_200_OK)
 
 
 # CourseTracker
