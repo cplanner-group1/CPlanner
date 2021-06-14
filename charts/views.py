@@ -114,14 +114,15 @@ class AddCTToChartView(APIView):
 
     def get(self, request):
         user = request.user
+        student = Student.objects.get(user__email=user.email)
         user_courses = CourseTracker.objects.filter(owner__email=request.user.email)
         # Create Chart
         chart_title = request.GET.get('title')
         new_chart = Chart(
             owner=user,
             title=chart_title,
-            university=user.student.university,
-            field=user.student.field
+            university=student.university,
+            field=student.field
         )
         new_chart.save()
         # Save and add Courses to chart
