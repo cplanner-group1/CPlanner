@@ -5,10 +5,11 @@ from charts import views
 urlpatterns = [
     # CourseTracker
     path('ct/', views.UserCourseTrackerView.as_view(), name='user_courses'),
-    path('ct/add/', views.UserCTAdd.as_view(), name='user_courses_add'),
+    path('ct/add/', views.UserCTAdd.as_view(), name='user_course_add'),
     path('ct/edit/', views.UserCTsEdit.as_view(), name='user_courses_edit'),
-    path('ct/delete/', views.UserCTDelete.as_view(), name='user_courses_delete'),
+    path('ct/delete/', views.UserCTsDelete.as_view(), name='user_courses_delete'),
     path('ct/dragdrop/', views.UserCTDragDrop.as_view(), name='user_course_dragdrop'),
+    path('ct/order/alpha/', views.UserCTOrderByAlphabet.as_view(), name='user_courses_order_alpha'),
 
     # TimeTable
     path('timetable/', views.UserTimetableView.as_view(), name='user_courses'),

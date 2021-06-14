@@ -191,7 +191,7 @@ class UserCTAdd(APIView):
         return Response({'id': course.id}, status=status.HTTP_200_OK)
 
 
-class UserCTDelete(APIView):
+class UserCTsDelete(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
@@ -270,6 +270,31 @@ class UserCTDragDrop(APIView):
         temp.save()
 
         return Response("جابجایی با موفقیت انجام شد.", status=status.HTTP_200_OK)
+
+
+class UserCTOrderByAlphabet(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user_courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('title')
+        i = 0
+        for course in user_courses:
+            course.index = i
+            course.save()
+            i += 1
+        result = []
+        for course in user_courses[::-1]:
+            result.append({
+                'title': course.title,
+                'grade': course.grade,
+                'unit': course.unit,
+                'status': course.status,
+                'label': course.label,
+                'description': course.description,
+                'index': course.index,
+                'id': course.id
+            })
+        return Response({'data': result}, status=status.HTTP_200_OK)
 
 
 # time table
