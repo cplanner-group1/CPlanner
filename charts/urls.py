@@ -14,7 +14,8 @@ urlpatterns = [
     path('timetable/', views.UserTimetableView.as_view(), name='user_courses'),
 
     # Charts
-    path('search/', views.SearchChartsView.as_view(), name='search_charts'),
+    path('search/unif/', views.SearchChartsByUFView.as_view(), name='search_charts'),
+    path('search/title/', views.SearchChartsByTView.as_view(), name='search_charts'),
 
     # Course
     path('course/suggest/', views.CourseAutocompleteView.as_view(), name='suggest_course'),

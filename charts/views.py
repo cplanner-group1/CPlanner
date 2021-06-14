@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import JsonResponse
 
+
 # Course
 class CourseAutocompleteView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -96,7 +97,7 @@ class AddChartView(APIView):
         pass
 
 
-class SearchChartsView(APIView):
+class SearchChartsByUFView(APIView):
     # serializer_class = ChartSerializer
     # permission_classes = (IsAuthenticated,)
 
@@ -104,6 +105,35 @@ class SearchChartsView(APIView):
         uni = request.GET.get('university')
         field = request.GET.get('field')
         charts = Chart.objects.filter(university__icontains=uni, field__icontains=field)[:10]
+        # order by what so we return best results?
+        result = []
+        for chart in charts:
+            courses = chart.course_set.all()
+            courses_res = []
+            for course in courses:
+                courses_res.append(course.title)
+
+            result.append({
+                'id': chart.id,
+                'title': chart.title,
+                'used': chart.used,
+                'owner': chart.owner.first_name + " " + chart.owner.last_name,
+                'university': chart.university,
+                'study': chart.field,
+                'date': chart.build_date,
+                'courses': courses_res
+            })
+
+        return JsonResponse({'data': result}, status=status.HTTP_200_OK)
+
+
+class SearchChartsByTView(APIView):
+    # serializer_class = ChartSerializer
+    # permission_classes = (IsAuthenticated,)
+
+    def get(self, request):  # recommends charts
+        title = request.GET.get('title')
+        charts = Chart.objects.filter(title__icontains=title)[:10]
         # order by what so we return best results?
         result = []
         for chart in charts:

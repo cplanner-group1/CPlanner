@@ -205,12 +205,12 @@ class DashboardView(APIView):
             s2_per = 0
             s3_per = 0
         else:
-            p1_per = floor(p1 * 100 / all_tasks)
-            p2_per = floor(p2 * 100 / all_tasks)
-            p3_per = 100 - floor(p1 * 100 / all_tasks) - floor(p2 * 100 / all_tasks)
-            s1_per = floor(s1 * 100 / all_tasks)
-            s2_per = floor(s2 * 100 / all_tasks)
-            s3_per = 100 - floor(s1 * 100 / all_tasks) - floor(s2 * 100 / all_tasks)
+            p1_per = round(p1 * 1000 / all_tasks) / 10.0
+            p2_per = round(p2 * 1000 / all_tasks) / 10.0
+            p3_per = round(p3 * 1000 / all_tasks) / 10.0
+            s1_per = round(s1 * 1000 / all_tasks) / 10.0
+            s2_per = round(s2 * 1000 / all_tasks) / 10.0
+            s3_per = round(s3 * 1000 / all_tasks) / 10.0
         result = {
             'passed': unit_sum,
             'priority1': p1,
