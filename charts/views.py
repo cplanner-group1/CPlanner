@@ -103,7 +103,7 @@ class SearchChartsView(APIView):
     def get(self, request):  # recommends charts
         uni = request.GET.get('university')
         field = request.GET.get('field')
-        charts = Chart.objects.filter(university__icontains=uni, field__icontains=field)
+        charts = Chart.objects.filter(university__icontains=uni, field__icontains=field)[:10]
         # order by what so we return best results?
         result = []
         for chart in charts:
