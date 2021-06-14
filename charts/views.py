@@ -116,7 +116,7 @@ class SearchChartsView(APIView):
                 'id': chart.id,
                 'title': chart.title,
                 'used': chart.used,
-                'owner': chart.owner.email,
+                'owner': chart.owner.first_name + " " + chart.owner.last_name,
                 'university': chart.university,
                 'study': chart.field,
                 'date': chart.build_date,
