@@ -340,7 +340,7 @@ class UserCTsOrderByAlphabet(APIView):
 
 
 # semester course
-class UserSemesterCourseView(APIView):
+class UserSCView(APIView):
     # serializer_class = UserSemesterCourseSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -449,6 +449,19 @@ class EditSCView(APIView):
             return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
 
 
+class UserSCDragDrop(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            sc = SemesterCourse.objects.get(id=request.data.get('id'))
+            sc.selected = -1 * sc.selected + 1
+            sc.save()
+        except:
+            return Response("جابجایی ناموفق بود.", status=status.HTTP_200_OK)
+        return Response("جابجایی با موفقیت انجام شد.", status=status.HTTP_200_OK)
+
+
 class SCAutoCompleteView(APIView):
     permission_classes = (IsAuthenticated,)
     # serializer_class = UserSemesterCourseSerializer
@@ -463,19 +476,6 @@ class SCAutoCompleteView(APIView):
             else:
                 break
         return Response({'courses': result}, status=status.HTTP_200_OK)
-
-
-class UserSCDragDrop(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def post(self, request):
-        try:
-            sc = SemesterCourse.objects.get(id=request.data.get('id'))
-            sc.selected = -1 * sc.selected + 1
-            sc.save()
-        except:
-            return Response("جابجایی ناموفق بود.", status=status.HTTP_200_OK)
-        return Response("جابجایی با موفقیت انجام شد.", status=status.HTTP_200_OK)
 
 
 class UserOverlapCheck(APIView):

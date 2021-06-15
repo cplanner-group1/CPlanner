@@ -11,8 +11,9 @@ urlpatterns = [
     path('ct/dragdrop/', views.UserCTDragDrop.as_view(), name='user_course_dragdrop'),
     path('ct/order/alpha/', views.UserCTsOrderByAlphabet.as_view(), name='user_courses_order_alpha'),
 
-    # TimeTable
-    path('timetable/', views.UserTimetableView.as_view(), name='user_courses'),
+    # Course
+    path('course/suggest/', views.CourseAutocompleteView.as_view(), name='suggest_course'),
+    path('course/suggest-pre/', views.SuggestPrerequisitesView.as_view(), name='suggest_prerequisite'),
 
     # Charts
     path('add-chart-ct/', views.AddChartToCTView.as_view(), name='add_chart_ct'),
@@ -20,9 +21,15 @@ urlpatterns = [
     path('search/unif/', views.SearchChartsByUFView.as_view(), name='search_charts'),
     path('search/title/', views.SearchChartsByTView.as_view(), name='search_charts'),
 
-    # Course
-    path('course/suggest/', views.CourseAutocompleteView.as_view(), name='suggest_course'),
-    path('course/suggest-pre/', views.CourseAutocompleteView.as_view(), name='suggest_course'),
+    # Semester Course
+    path('sc/', views.UserSCView.as_view(), name='user_sc_get_add'),
+    path('sc/edit/', views.EditSCView.as_view(), name='user_sc_edit'),
+    path('sc/delete/', views.DeleteSCView.as_view(), name='user_sc_delete'),
+    path('sc/dragdrop/', views.UserSCDragDrop.as_view(), name='user_sc_dragdrop'),
 
+    # TimeTable
+    path('timetable/', views.UserTimetableView.as_view(), name='user_timetable'),
+
+    # Auth (not necessary)
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework_CTs'))
 ]
