@@ -82,7 +82,7 @@ class AddChartToCTView(APIView):
         # now add new courses from given chart
         ID = request.GET.get('id')
         chart = Chart.objects.get(id=ID)
-        courses = chart.course_set.all().order_by('-title')
+        courses = chart.course_set.all().order_by('title')
         result = []
         i = 0
         for course in courses:
@@ -318,14 +318,14 @@ class UserCTsOrderByAlphabet(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        user_courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('-title')
+        user_courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('title')
         i = 0
         for course in user_courses:
             course.index = i
             course.save()
             i += 1
         result = []
-        for course in user_courses[::-1]:
+        for course in user_courses:
             result.append({
                 'title': course.title,
                 'grade': course.grade,
