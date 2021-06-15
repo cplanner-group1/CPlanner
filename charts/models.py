@@ -45,6 +45,21 @@ class Course(models.Model):
     suggested_prerequisites = models.TextField(default='')
 
 
+# semester course
+class SemesterCourse(models.Model):
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='semester_course_owner')
+    course = models.CharField(max_length=100)
+    instructor = models.CharField(max_length=100)
+    times = models.TextField(default='')
+    time_exam = models.CharField(max_length=100)
+    priority = models.BooleanField(default=0)
+    description = models.CharField(max_length=100)
+    selected = models.BooleanField(default=0)
+
+    def str(self):
+        return self.course + " - " + self.instructor
+
+
 # timetable
 class Timetable(models.Model):
     owner = models.OneToOneField(Student, on_delete=models.CASCADE, default=0)

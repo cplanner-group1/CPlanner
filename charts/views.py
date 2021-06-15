@@ -339,6 +339,167 @@ class UserCTsOrderByAlphabet(APIView):
         return Response({'data': result}, status=status.HTTP_200_OK)
 
 
+# semester course
+class UserSemesterCourseView(APIView):
+    # serializer_class = UserSemesterCourseSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        result = []
+        user_semester_course = SemesterCourse.objects.filter(owner__email=request.user.email)
+        status = user_semester_course.exists()
+        if status:
+            for sc in user_semester_course[::-1]:
+                one_semester_course = []
+                exam = sc.time_exam.split('$')
+                dates = sc.times.split('%')
+                each_date = []
+                for d in dates:
+                    each_date.append(d.split('$'))
+                one_semester_course.append({
+                    'id': sc.id,
+                    'courses': sc.course,
+                    'master': sc.instructor,
+                    'date': each_date,
+                    'finalExam': exam,
+                    'priority': sc.priority,
+                    'description': sc.description,
+                    'selected': sc.selected,
+                })
+                result.append(one_semester_course)
+            return Response({'status': status, 'user_semester_course': result}, status=status.HTTP_200_OK)
+
+        return Response({'status': status, 'user_semester_course': result}, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        exam = request.data.get('finalExam')
+        exam_time = "$".join(exam)
+
+        date = request.data.get('date')
+        t = []
+        for d in date:
+            t.append("$".join(d))
+        times = "%".join(t)
+
+        SemesterCourse.objects.create(
+            owner=request.user,
+            instructor=request.data.get('master'),
+            times=times,
+            time_exam=exam_time,
+            course=request.data.get('courses'),
+            priority=request.data.get('priority'),
+            description=request.data.get('description')
+        )
+        return Response("با موفقیت اضافه شد.", status=status.HTTP_200_OK)
+
+
+class DeleteSCView(APIView):
+    # serializer_class = UserSemesterCourseSerializer
+    permission_classes = (IsAuthenticated,)
+
+    # delete one semester course
+    def post(self, request):
+        ids = request.data.get('id')
+        try:
+            SemesterCourse.objects.get(id=ids).delete()
+        except:
+            return Response("حذف ناموفق بود.",
+                            status=status.HTTP_200_OK)
+        return Response("با موفقیت حذف شد.",
+                        status=status.HTTP_200_OK)
+
+    # delete all semester courses (delete timetables as well?)
+    def get(self, request):
+        user_semester_course = SemesterCourse.objects.filter(owner__email=request.user.email)
+        # user_timetable = Timetable.objects.get(owner__email=request.user.email)
+        for course in user_semester_course:
+            try:
+                course.delete()
+                # user_timetable.delete()
+            except:
+                return Response("حذف ناموفق بود.",
+                                status=status.HTTP_200_OK)
+        return Response("با موفقیت حذف شدند.",
+                        status=status.HTTP_200_OK)
+
+
+class EditSCView(APIView):
+    # serializer_class = UserSemesterCourseSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):  # edit one semester course
+        exam = request.data.get('time_exam')
+        exam_time = "$".join(exam)
+        date = request.data.get('times')
+        t = []
+        for d in date:
+            t.append("$".join(d))
+        times = "%".join(t)
+        try:
+            current_course = SemesterCourse.objects.get(id=request.data.get('id'))
+            current_course.course = request.data.get('course')
+            current_course.instructor = request.data.get('instructor')
+            current_course.times = times
+            current_course.time_exam = exam_time
+            current_course.priority = request.data.get('priority')
+            current_course.description = request.data.get('description')
+            current_course.save()
+            return Response("تغییرات با موفقیت ثبت شد.", status=status.HTTP_200_OK)
+        except:
+            return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
+
+
+class SCAutoCompleteView(APIView):
+    permission_classes = (IsAuthenticated,)
+    # serializer_class = UserSemesterCourseSerializer
+
+    def get(self, request):
+        text = request.GET.get('text')
+        chart = CourseTracker.objects.filter(owner__email=request.user.email, course__icontains=text)
+        result = []
+        for c in chart:
+            if len(result) <= 10:
+                result.append({'title': c.title})
+            else:
+                break
+        return Response({'courses': result}, status=status.HTTP_200_OK)
+
+
+class UserSCDragDrop(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        try:
+            sc = SemesterCourse.objects.get(id=request.data.get('id'))
+            sc.selected = -1 * sc.selected + 1
+            sc.save()
+        except:
+            return Response("جابجایی ناموفق بود.", status=status.HTTP_200_OK)
+        return Response("جابجایی با موفقیت انجام شد.", status=status.HTTP_200_OK)
+
+
+class UserOverlapCheck(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        selected_courses = SemesterCourse.objects.filter(owner__email=request.user.email, selected=1)
+        overlap = []
+        for c in selected_courses:
+            for k in selected_courses:
+                if c.index != k.index and c.time_exam == k.time_exam:
+                    overlapping_courses = ({
+                        'course1': c.course,
+                        'course2': k.course,
+                        'finalExam': c.time_exam, })
+                    overlap.append(overlapping_courses)
+        if len(overlap) == 0:
+            return Response({'status': 'بدون تداخل.',
+                             'data': overlap}, status=status.HTTP_200_OK)
+
+        return Response({'status': 'تداخل امتحانی وجود دارد.',
+                        'data': overlap}, status=status.HTTP_200_OK)
+
+
 # time table
 class UserTimetableView(APIView):
     # serializer_class = UserTimetableSerializer
