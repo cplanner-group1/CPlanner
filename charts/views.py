@@ -428,17 +428,21 @@ class EditSCView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):  # edit one semester course
-        exam = request.data.get('time_exam')
-        exam_time = "$".join(exam)
-        date = request.data.get('times')
+        exam = request.data.get('finalExam')
+        exam_list = [exam['startTime'], exam['endTime'],
+                     exam['date'], exam['weak']]
+        exam_time = "$".join(exam_list)
+        date = request.data.get('date')
         t = []
         for d in date:
-            t.append("$".join(d))
+            d_list = [d['startTime'], d['endTime'],
+                      d['date'], d['weak']]
+            t.append("$".join(d_list))
         times = "%".join(t)
         try:
             current_course = SemesterCourse.objects.get(id=request.data.get('id'))
-            current_course.course = request.data.get('course')
-            current_course.instructor = request.data.get('instructor')
+            current_course.course = request.data.get('courses')
+            current_course.instructor = request.data.get('master')
             current_course.times = times
             current_course.time_exam = exam_time
             current_course.priority = request.data.get('priority')
