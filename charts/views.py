@@ -347,8 +347,8 @@ class UserSCView(APIView):
     def get(self, request):
         result = []
         user_semester_course = SemesterCourse.objects.filter(owner__email=request.user.email)
-        status = user_semester_course.exists()
-        if status:
+        user_status = user_semester_course.exists()
+        if user_status:
             for sc in user_semester_course[::-1]:
                 one_semester_course = []
                 exam = sc.time_exam.split('$')
@@ -367,9 +367,9 @@ class UserSCView(APIView):
                     'selected': sc.selected,
                 })
                 result.append(one_semester_course)
-            return Response({'status': status, 'user_semester_course': result}, status=status.HTTP_200_OK)
+            return Response({'status': user_status, 'user_semester_course': result}, status=status.HTTP_200_OK)
 
-        return Response({'status': status, 'user_semester_course': result}, status=status.HTTP_200_OK)
+        return Response({'status': user_status, 'user_semester_course': result}, status=status.HTTP_200_OK)
 
     def post(self, request):
         exam = request.data.get('finalExam')
