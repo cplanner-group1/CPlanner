@@ -55,6 +55,7 @@ class SemesterCourse(models.Model):
     priority = models.BooleanField(default=0)
     description = models.CharField(max_length=100)
     selected = models.BooleanField(default=0)
+    status = models.IntegerField(default=0)
 
     def str(self):
         return self.course + " - " + self.instructor

@@ -365,6 +365,7 @@ class UserSCView(APIView):
                     'priority': sc.priority,
                     'description': sc.description,
                     'selected': sc.selected,
+                    'status':sc.status
                 })
                 result.append(one_semester_course)
             return Response({'status': user_status, 'user_semester_course': result}, status=status.HTTP_200_OK)
@@ -388,6 +389,7 @@ class UserSCView(APIView):
             time_exam=exam_time,
             course=request.data.get('courses'),
             priority=request.data.get('priority'),
+            status=request.data.get('status'),
             description=request.data.get('description')
         )
         return Response("با موفقیت اضافه شد.", status=status.HTTP_200_OK)
