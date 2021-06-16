@@ -436,7 +436,7 @@ class EditSCView(APIView):
         t = []
         for d in date:
             d_list = [d['startTime'], d['endTime'],
-                      d['date'], d['weak']]
+                      d['date'], d['week']]
             t.append("$".join(d_list))
         times = "%".join(t)
         try:
