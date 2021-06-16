@@ -455,7 +455,10 @@ class UserSCDragDrop(APIView):
     def post(self, request):
         try:
             sc = SemesterCourse.objects.get(id=request.data.get('id'))
-            sc.selected = -1 * sc.selected + 1
+            if sc.selected:
+                sc.selected = False
+            else:
+                sc.selected = True
             sc.save()
         except:
             return Response("جابجایی ناموفق بود.", status=status.HTTP_200_OK)
