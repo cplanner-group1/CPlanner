@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Chart, Course, CourseTracker
+from .models import Chart, Course, CourseTracker, SemesterCourse
 
 
 class CourseTrackerAdmin(admin.ModelAdmin):
@@ -23,3 +23,9 @@ class CourseAdmin(admin.ModelAdmin):
 
 admin.site.register(Course, CourseAdmin)
 
+
+class SCAdmin(admin.ModelAdmin):
+    list_display = ['owner', 'course', 'instructor', 'times', 'time_exam', 'id']
+
+
+admin.site.register(SemesterCourse, SCAdmin)

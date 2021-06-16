@@ -373,12 +373,12 @@ class UserSCView(APIView):
 
     def post(self, request):
         exam = request.data.get('finalExam')
-        exam_time = "$".join(exam)
+        exam_time = "$".join(list(exam.values()))
 
         date = request.data.get('date')
         t = []
         for d in date:
-            t.append("$".join(d))
+            t.append("$".join(list(d.values())))
         times = "%".join(t)
 
         SemesterCourse.objects.create(
