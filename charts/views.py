@@ -430,7 +430,7 @@ class EditSCView(APIView):
     def post(self, request):  # edit one semester course
         exam = request.data.get('finalExam')
         exam_list = [exam['startTime'], exam['endTime'],
-                     exam['date'], exam['weak']]
+                     exam['date'], exam['week']]
         exam_time = "$".join(exam_list)
         date = request.data.get('date')
         t = []
