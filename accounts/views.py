@@ -196,6 +196,4 @@ class StudentInfoView(views.APIView):
             student.save()
             return Response("تغییرات با موفقیت ثبت شد.", status=status.HTTP_200_OK)
         except:
-            return Response("مشکلی در ثبت تغییرات وجود دارد.\n"
-                            "پس از مدتی دوباره امتحان کنید,\n"
-                            "یا با مدیریت سایت تماس حاصل فرمایید.", status=status.HTTP_200_OK)
+            return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)

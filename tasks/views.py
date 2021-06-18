@@ -43,7 +43,8 @@ class UserTasksAdd(APIView):
             index=ind,
             deadline=datetime.now()
         )
-        return Response({'id': task.id,
+        return Response({'status': "با موفقیت اضافه شد.",
+                         'id': task.id,
                          'date': task.deadline.strftime("%Y-%m-%d %H:%M:%S")},
                         status=status.HTTP_200_OK)
 
@@ -61,8 +62,13 @@ class UserTaskDelete(APIView):
                 Task.objects.filter(id=ID).delete()
                 counts += 1
             except:
-               continue
-
+                new_index = 0
+                tasks = Task.objects.filter(owner__email=request.user.email).order_by('index')
+                for task in tasks:
+                    task.index = new_index
+                    task.save()
+                    new_index += 1
+                return Response("حذف ناموفق بود.", status=status.HTTP_200_OK)
         # now rewrite indexes
         new_index = 0
         tasks = Task.objects.filter(owner__email=request.user.email).order_by('index')
@@ -81,7 +87,7 @@ class UserTasksEdit(APIView):
     def post(self, request):
         update_tasks = list(request.data.get('data'))
         for task in update_tasks:
-             try:
+            try:
                 current_task = Task.objects.get(id=task['id'])
                 current_task.title = task['title']
                 current_task.group = task['owner']
@@ -90,8 +96,8 @@ class UserTasksEdit(APIView):
                 current_task.priority = task['priority']
                 current_task.description = task['description']
                 current_task.save()
-             except:
-                 return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
+            except:
+                return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
         return Response("تغییرات با موفقیت ثبت شد.", status=status.HTTP_200_OK)
 
 
@@ -182,6 +188,7 @@ class GetTasksByDeadline(APIView):
 # Dashboard
 class DashboardView(APIView):
     permission_classes = (IsAuthenticated,)
+
     # serializer_class = CourseSerializer
 
     def get(self, request):
