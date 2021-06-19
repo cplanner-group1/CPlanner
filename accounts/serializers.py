@@ -71,17 +71,13 @@ class LoginSerializer(serializers.ModelSerializer):
                 detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
 
         if not user:
-            return {'status': "ایمیل یا رمز عبور نادرست است."}
-            # raise AuthenticationFailed('Invalid credentials, try again')
+            raise AuthenticationFailed("ایمیل یا رمز عبور نادرست است.")
         if not user.is_active:
-            return {'status': "اکانت شما غیر فعال است."}
-            # raise AuthenticationFailed('Account disabled, contact admin')
+            raise AuthenticationFailed("اکانت شما غیر فعال است.\nلطفا با مدیریت تماس بگیرید.")
         if not user.is_verified:
-            return {'status': "ایمیل شما تایید نشده است."}
-            # raise AuthenticationFailed('Email is not verified')
+            raise AuthenticationFailed("ایمیل شما تایید نشده است.")
 
         return {
-            'status': "1",
             'email': user.email,
             'username': user.username,
             'tokens': user.tokens
