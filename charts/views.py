@@ -50,7 +50,7 @@ class SuggestPrerequisitesView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):  # recommends prerequisites
-        title = request.GET.get('course')
+        title = request.GET.get('text')
         result = []
         user_courses = CourseTracker.objects.filter(owner__email=request.user.email)
         for course in user_courses:
@@ -210,6 +210,7 @@ class UserCourseTrackerView(APIView):
         user_courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('-index')
         result = []
         for course in user_courses[::-1]:
+            prerequisites = course.prerequisites.split("$")
             result.append({
                 'title': course.title,
                 'grade': course.grade,
@@ -218,7 +219,8 @@ class UserCourseTrackerView(APIView):
                 'label': course.label,
                 'description': course.description,
                 'index': course.index,
-                'id': course.id
+                'id': course.id,
+                'prerequisites': prerequisites
             })
         return Response({'data': result}, status=status.HTTP_200_OK)
 
@@ -263,7 +265,7 @@ class UserCTsEdit(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        update_courses = list(request.data.get('data'))
+        update_courses = request.data.get('data')
         for course in update_courses:
              # try:
                 current_course = CourseTracker.objects.get(id=course['course']['id'])
