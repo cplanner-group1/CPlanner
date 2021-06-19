@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
-
 from .serializers import RegisterSerializer, SetNewPasswordSerializer, ResetPasswordEmailRequestSerializer, \
     EmailVerificationSerializer, LoginSerializer, LogoutSerializer, StudentInfoSerializer
 from .models import User, Student
@@ -36,7 +35,11 @@ class RegisterView(generics.GenericAPIView):
     def post(self, request):
         user = request.data
         serializer = self.serializer_class(data=user)
-        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except AuthenticationFailed as ve:
+            return Response(ve.__str__(), status=status.HTTP_200_OK)
+
         serializer.save()
         user_data = serializer.data
         user = User.objects.get(email=user_data['email'])
