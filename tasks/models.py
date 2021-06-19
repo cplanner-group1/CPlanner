@@ -14,8 +14,7 @@ class Task(models.Model):
     group = models.CharField(max_length=100, default='')
     status = models.IntegerField(default=0)
 
-    local_tz = pytz.timezone(settings.TIME_ZONE)
-    dt = datetime.now(local_tz) + timezone.timedelta(days=1)
+    dt = timezone.now() + timezone.timedelta(days=1)
     dt -= timezone.timedelta(seconds=dt.second)
     dt -= timezone.timedelta(minutes=dt.minute)
     deadline = models.DateTimeField(default=dt)
