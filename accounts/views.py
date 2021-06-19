@@ -20,7 +20,8 @@ from django.utils.encoding import smart_str, smart_bytes, DjangoUnicodeDecodeErr
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from django.http import HttpResponsePermanentRedirect
+from django.http import HttpResponsePermanentRedirect, HttpResponse
+from django.views.generic import TemplateView
 import os
 
 
@@ -72,11 +73,11 @@ class VerifyEmail(views.APIView):
             if not user.is_verified:
                 user.is_verified = True
                 user.save()
-            return Response({'email': 'Successfully activated'}, status=status.HTTP_200_OK)
+            return HttpResponse('Successfully activated', status=status.HTTP_200_OK, content_type='text/plain')
         except jwt.ExpiredSignatureError as identifier:
-            return Response({'error': 'Activation Expired'}, status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse('Activation Expired', status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
-            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse('Invalid token', status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginAPIView(generics.GenericAPIView):

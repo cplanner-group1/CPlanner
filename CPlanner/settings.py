@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2r&-8$hf)z@&ybjglo=1xd!x*ksg_^oc#q9$o+x3fpce247q6^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['cplanner-group1.herokuapp.com',
                  '127.0.0.1',
@@ -95,7 +95,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'CPlanner.wsgi.application'
 
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
 
 
 # Database
