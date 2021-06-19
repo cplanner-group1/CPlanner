@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 import datetime
 from tzlocal import get_localzone
 from accounts.models import User
@@ -11,7 +12,7 @@ class Task(models.Model):
     title = models.CharField(max_length=100, default='')
     group = models.CharField(max_length=100, default='')
     status = models.IntegerField(default=0)
-    dt = datetime.datetime.now(tz=get_localzone().__str__())
+    dt = datetime.datetime.now() + datetime.timedelta(days=1)
     dt.replace(hour=0, minute=0, second=0)
     deadline = models.DateTimeField(default=dt)
     priority = models.IntegerField(default=1)
