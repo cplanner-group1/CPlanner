@@ -11,7 +11,7 @@ admin.site.register(CourseTracker, CourseTrackerAdmin)
 
 
 class ChartAdmin(admin.ModelAdmin):
-    list_display = ['university', 'field']
+    list_display = ['title', 'university', 'field', 'used', 'build_date', 'owner']
 
 
 admin.site.register(Chart, ChartAdmin)

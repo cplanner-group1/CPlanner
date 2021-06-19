@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2r&-8$hf)z@&ybjglo=1xd!x*ksg_^oc#q9$o+x3fpce247q6^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['cplanner-group1.herokuapp.com',
                  '127.0.0.1',
