@@ -275,6 +275,7 @@ class UserCTsEdit(APIView):
                 current_course.label = course['label']
                 current_course.unit = course['unit']
                 current_course.description = course['description']
+                current_course.prerequisites = course['prerequisites'].join("$")
                 current_course.save()
              # except:
                  #return Response("ذخیره تغییرات ناموفق بود.", status=status.HTTP_200_OK)
