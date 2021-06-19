@@ -81,6 +81,7 @@ class LoginSerializer(serializers.ModelSerializer):
             # raise AuthenticationFailed('Email is not verified')
 
         return {
+            'status': "1",
             'email': user.email,
             'username': user.username,
             'tokens': user.tokens
