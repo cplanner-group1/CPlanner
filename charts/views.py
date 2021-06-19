@@ -61,7 +61,10 @@ class SuggestPrerequisitesView(APIView):
         if len(result) < 10:
             all_courses = Course.objects.filter(title=title)
             for course in all_courses:  # need change
-                prerequisites = course.suggested_prerequisites
+                if course.suggested_prerequisites == "":
+                    prerequisites = []
+                else:
+                    prerequisites = course.suggested_prerequisites.split("$")
                 for p in prerequisites:
                     if p not in result:
                         result.append(p)
