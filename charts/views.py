@@ -82,6 +82,8 @@ class AddChartToCTView(APIView):
         # now add new courses from given chart
         ID = request.GET.get('id')
         chart = Chart.objects.get(id=ID)
+        chart.used = chart.used + 1
+        chart.save()
         courses = chart.course_set.all().order_by('title')
         result = []
         i = 0
