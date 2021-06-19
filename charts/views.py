@@ -479,7 +479,7 @@ class SCAutoCompleteView(APIView):
 
     def get(self, request):
         text = request.GET.get('text')
-        chart = CourseTracker.objects.filter(owner__email=request.user.email, course__icontains=text)
+        chart = CourseTracker.objects.filter(owner__email=request.user.email, title__icontains=text)
         result = []
         for c in chart:
             if len(result) <= 10:

@@ -26,6 +26,7 @@ urlpatterns = [
     path('sc/edit/', views.EditSCView.as_view(), name='user_sc_edit'),
     path('sc/delete/', views.DeleteSCView.as_view(), name='user_sc_delete'),
     path('sc/dragdrop/', views.UserSCDragDrop.as_view(), name='user_sc_dragdrop'),
+    path('sc/autocomplete/', views.SCAutoCompleteView.as_view(), name='sc_auto_complete'),
 
     # TimeTable
     path('timetable/', views.UserTimetableView.as_view(), name='user_timetable'),
