@@ -94,9 +94,14 @@ class AddChartToCTView(APIView):
                 index=i,
                 title=course.title,
                 label=course.label,
-                unit=course.unit
+                unit=course.unit,
+                prerequisites=course.suggested_prerequisites
             )
             # Get Course Tracker data to Response
+            if added_course.prerequisites == "":
+                prerequisites_list = []
+            else:
+                prerequisites_list = added_course.prerequisites.split("$")
             result.append({
                 'title': added_course.title,
                 'grade': added_course.grade,
@@ -105,7 +110,8 @@ class AddChartToCTView(APIView):
                 'label': added_course.label,
                 'description': added_course.description,
                 'index': added_course.index,
-                'id': added_course.id
+                'id': added_course.id,
+                'prerequisites': prerequisites_list
             })
             i += 1
         return Response({'data': result}, status=status.HTTP_200_OK)
@@ -117,7 +123,7 @@ class AddCTToChartView(APIView):
     def get(self, request):
         user = request.user
         student = Student.objects.get(user__email=user.email)
-        user_courses = CourseTracker.objects.filter(owner__email=request.user.email)
+        user_courses = CourseTracker.objects.filter(owner__email=user.email)
         # Create Chart
         chart_title = request.GET.get('title')
         new_chart = Chart(
@@ -210,7 +216,10 @@ class UserCourseTrackerView(APIView):
         user_courses = CourseTracker.objects.filter(owner__email=request.user.email).order_by('-index')
         result = []
         for course in user_courses[::-1]:
-            prerequisites = course.prerequisites.split("$")
+            if course.prerequisites == "":
+                prerequisites = []
+            else:
+                prerequisites = course.prerequisites.split("$")
             result.append({
                 'title': course.title,
                 'grade': course.grade,
