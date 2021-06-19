@@ -9,32 +9,12 @@ from django.http import JsonResponse
 
 
 # Course
-class CourseAutocompleteView(APIView):
-    permission_classes = (IsAuthenticated,)
-    # serializer_class = CourseSerializer
-
-    def get(self, request):
-        text = request.data.get('textfield')
-        courses = Course.objects.filter(title__icontains=text)
-        result = []
-        for c in courses:
-            if len(result) <= 10:
-                r = [{
-                    'title': c.title,
-                    'id': c.id
-                }]
-                result.append({r})
-            else:
-                break
-        return Response({'courses': result}, status=status.HTTP_200_OK)
-
-
 class GetCourseView(APIView):  # send course information when user clicks on a autocompleted course option
     permission_classes = (IsAuthenticated,)
     # serializer_class = CourseSerializer
 
     def get(self, request):
-        course = Course.objects.get(id=request.data.get('id'))
+        course = Course.objects.get(id=request.GET.get('id'))
         result = {
             'course': course.title,
             'unit': course.unit,
@@ -42,7 +22,26 @@ class GetCourseView(APIView):  # send course information when user clicks on a a
             'suggestedPrerequisites': course.suggested_prerequisites,
         }
 
-        return Response({result}, status=status.HTTP_200_OK)
+        return Response(result, status=status.HTTP_200_OK)
+
+
+class CourseAutocompleteView(APIView):
+    permission_classes = (IsAuthenticated,)
+    # serializer_class = CourseSerializer
+
+    def get(self, request):
+        text = request.GET.get('text')
+        courses = Course.objects.filter(title__icontains=text)
+        result = []
+        for c in courses:
+            if len(result) <= 10:
+                result.append({
+                    'title': c.title,
+                    'id': c.id
+                })
+            else:
+                break
+        return Response({'courses': result}, status=status.HTTP_200_OK)
 
 
 class SuggestPrerequisitesView(APIView):
