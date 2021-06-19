@@ -41,7 +41,6 @@ class UserTasksAdd(APIView):
         task = Task.objects.create(
             owner=request.user,
             index=ind,
-            deadline=datetime.now()
         )
         return Response({'status': "با موفقیت اضافه شد.",
                          'id': task.id,
