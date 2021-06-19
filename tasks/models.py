@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils import timezone
+from tzlocal import get_localzone
+from datetime import datetime
 from accounts.models import User
 from persiantools.digits import to_word
 
@@ -18,7 +20,7 @@ class Task(models.Model):
     description = models.TextField(default='')
 
     def remained_time_fa(self):
-        remained = self.deadline - timezone.now()
+        remained = self.deadline - datetime.now(tz=get_localzone())
         if remained.days > 0:
             return str(remained.days)\
                    + " روز"
