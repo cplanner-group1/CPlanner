@@ -10,7 +10,9 @@ class Task(models.Model):
     title = models.CharField(max_length=100, default='')
     group = models.CharField(max_length=100, default='')
     status = models.IntegerField(default=0)
-    deadline = models.DateTimeField(default=timezone.now)
+    dt = timezone.now() + timezone.timedelta(days=1)
+    dt.replace(hour=0, minute=0, second=0)
+    deadline = models.DateTimeField(default=dt)
     priority = models.IntegerField(default=1)
     description = models.TextField(default='')
 
