@@ -13,18 +13,14 @@ class Task(models.Model):
     title = models.CharField(max_length=100, default='')
     group = models.CharField(max_length=100, default='')
     status = models.IntegerField(default=0)
-
-    dt = timezone.now() + timezone.timedelta(days=1)
-    dt -= timezone.timedelta(seconds=dt.second)
-    dt -= timezone.timedelta(minutes=dt.minute)
-    deadline = models.DateTimeField(default=dt)
+    tt = timezone.now()
+    deadline = models.DateTimeField(default=timezone.now() - timezone.timedelta(minutes=tt.minute, seconds=tt.second))
 
     priority = models.IntegerField(default=1)
     description = models.TextField(default='')
 
     def remained_time_fa(self):
-        local_tz = pytz.timezone(settings.TIME_ZONE)
-        remained = self.deadline - datetime.now(local_tz)
+        remained = self.deadline - timezone.now()
         if remained.days > 0:
             return str(remained.days)\
                    + " روز"
