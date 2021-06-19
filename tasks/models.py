@@ -22,7 +22,7 @@ class Task(models.Model):
     description = models.TextField(default='')
 
     def remained_time_fa(self):
-        remained = self.deadline - timezone.localtime(timezone.now())
+        remained = self.deadline - timezone.localtime(timezone=settings.TIME_ZONE)
         if remained.days > 0:
             return str(remained.days)\
                    + " روز"
