@@ -3,6 +3,7 @@ from tasks import views
 
 
 urlpatterns = [
+    path('timecheck/', views.index),
     path('', views.UserTasksViewFa.as_view(), name='user_tasks'),
     path('add/', views.UserTasksAdd.as_view(), name='user_tasks_add'),
     path('edit/', views.UserTasksEdit.as_view(), name='user_tasks_edit'),

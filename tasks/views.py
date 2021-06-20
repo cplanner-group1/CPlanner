@@ -1,6 +1,6 @@
+from django.http import HttpResponse
 from tasks.models import Task
 from charts.models import CourseTracker
-from math import floor
 from tasks.serializers import UserTasksSerializer
 from datetime import datetime
 from rest_framework import status
@@ -235,3 +235,9 @@ class DashboardView(APIView):
             's3': s3_per
         }
         return Response(result, status=status.HTTP_200_OK)
+
+def index(request):
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S\n")
+    return HttpResponse(current_time)
+
