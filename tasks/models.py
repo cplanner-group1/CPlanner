@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from datetime import datetime
-import pytz
+from pytz import timezone as py_timezone
 from accounts.models import User
 from CPlanner import settings
 from persiantools.digits import to_word
@@ -13,18 +13,18 @@ class Task(models.Model):
     title = models.CharField(max_length=100, default='')
     group = models.CharField(max_length=100, default='')
     status = models.IntegerField(default=0)
-
-    # tt = timezone.now() + timezone.timedelta(days=1)
-    # tt -= timezone.timedelta(minutes=tt.minute, seconds=tt.second)
-    LOCAL_TIMEZONE = datetime.now(timezone.utc).astimezone().tzinfo
-    deadline = models.DateTimeField(default=LOCAL_TIMEZONE)
+    tt = timezone.now() + timezone.timedelta(days=1)
+    tt -= timezone.timedelta(minutes=tt.minute, seconds=tt.second)
+    deadline = models.DateTimeField(default=tt)
 
     priority = models.IntegerField(default=1)
     description = models.TextField(default='')
 
     def remained_time_fa(self, tz):
-        current_time = timezone.localtime(timezone.now(), tz)
-        remained = self.deadline - current_time
+        current_time = datetime.now(py_timezone(tz))
+        current_time = current_time.replace(tzinfo=None)
+        dead = self.deadline.replace(tzinfo=None)
+        remained = dead - current_time
         if remained.days > 0:
             return str(remained.days)\
                    + " روز"
