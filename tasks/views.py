@@ -15,6 +15,7 @@ class UserTasksViewFa(APIView):
 
     def get(self, request):
         # ordered by index
+        current_time = request.GET.get('now')
         user_tasks = Task.objects.filter(owner__email=request.user.email).order_by('-index')
         result = []
         for task in user_tasks[::-1]:
@@ -26,7 +27,7 @@ class UserTasksViewFa(APIView):
                 'deadline': task.deadline.strftime("%Y-%m-%d %H:%M:%S"),
                 'priority': task.priority,
                 'description': task.description,
-                'remained_time': task.remained_time_fa(),
+                'remained_time': task.remained_time_fa(datetime.strptime(current_time, '%Y-%m-%dT%H:%M:%S%z')),
                 'index': task.index,
                 'id': task.id
             })
@@ -236,7 +237,8 @@ class DashboardView(APIView):
         }
         return Response(result, status=status.HTTP_200_OK)
 
-def index(request):
+
+def time_check(request):
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S\n")
     return HttpResponse(current_time)

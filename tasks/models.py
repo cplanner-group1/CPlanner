@@ -22,8 +22,8 @@ class Task(models.Model):
     priority = models.IntegerField(default=1)
     description = models.TextField(default='')
 
-    def remained_time_fa(self):
-        remained = self.deadline - timezone.now()
+    def remained_time_fa(self, current_time):
+        remained = self.deadline - current_time
         if remained.days > 0:
             return str(remained.days)\
                    + " روز"
