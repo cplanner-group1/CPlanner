@@ -3,7 +3,6 @@ from django.utils import timezone
 from datetime import datetime
 from pytz import timezone as py_timezone
 from accounts.models import User
-from CPlanner import settings
 from persiantools.digits import to_word
 
 
