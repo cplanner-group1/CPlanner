@@ -16,7 +16,8 @@ class Task(models.Model):
 
     # tt = timezone.now() + timezone.timedelta(days=1)
     # tt -= timezone.timedelta(minutes=tt.minute, seconds=tt.second)
-    deadline = models.DateTimeField(default=timezone.now)
+    LOCAL_TIMEZONE = datetime.now(timezone.utc).astimezone().tzinfo
+    deadline = models.DateTimeField(default=LOCAL_TIMEZONE)
 
     priority = models.IntegerField(default=1)
     description = models.TextField(default='')

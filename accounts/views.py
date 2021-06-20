@@ -35,10 +35,8 @@ class RegisterView(generics.GenericAPIView):
     def post(self, request):
         user = request.data
         serializer = self.serializer_class(data=user)
-        try:
-            serializer.is_valid(raise_exception=True)
-        except AuthenticationFailed as ve:
-            return Response(ve.__str__(), status=status.HTTP_200_OK)
+
+        serializer.is_valid(raise_exception=True)
 
         serializer.save()
         user_data = serializer.data
