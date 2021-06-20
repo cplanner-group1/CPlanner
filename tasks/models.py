@@ -13,15 +13,16 @@ class Task(models.Model):
     title = models.CharField(max_length=100, default='')
     group = models.CharField(max_length=100, default='')
     status = models.IntegerField(default=0)
-    tt = timezone.now() + timezone.timedelta(days=1) \
-    tt -= timezone.timedelta(minutes=tt.minute, seconds=tt.second)
-    deadline = models.DateTimeField(default=timezone.now())
+
+    # tt = timezone.now() + timezone.timedelta(days=1)
+    # tt -= timezone.timedelta(minutes=tt.minute, seconds=tt.second)
+    deadline = models.DateTimeField(default=timezone.now)
 
     priority = models.IntegerField(default=1)
     description = models.TextField(default='')
 
     def remained_time_fa(self):
-        remained = self.deadline - timezone.now()
+        remained = self.deadline - timezone.now
         if remained.days > 0:
             return str(remained.days)\
                    + " روز"
