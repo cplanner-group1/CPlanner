@@ -179,7 +179,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "cplanner.email.management@gmail.com"
 DEFAULT_FROM_EMAIL = "Charter <cplanner.email.management@gmail.com>"
-EMAIL_HOST_PASSWORD = 'txbqarxigmegrufn'
+EMAIL_HOST_PASSWORD = '123'
 
 
 # Default primary key field type
