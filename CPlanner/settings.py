@@ -22,14 +22,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-2r&-8$hf)z@&ybjglo=1xd!x*ksg_^oc#q9$o+x3fpce247q6^'
+SECRET_KEY = '123'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cplanner-group1.herokuapp.com',
+ALLOWED_HOSTS = [
+                 'cplanner-group1.herokuapp.com',
                  '127.0.0.1',
-                 ]
+               ]
 
 AUTH_USER_MODEL = 'accounts.User'
 # Application definition
@@ -106,7 +107,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'test',
         'USER': 'test',
-        'PASSWORD': '123,
+        'PASSWORD': '123',
         'HOST': 'my_host',
         'PORT': '5432',
     }
